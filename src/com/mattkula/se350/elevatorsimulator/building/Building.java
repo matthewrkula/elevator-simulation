@@ -2,7 +2,6 @@ package com.mattkula.se350.elevatorsimulator.building;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Random;
 
 import com.mattkula.se350.elevatorsimulator.elevator.Elevator;
@@ -17,12 +16,9 @@ public class Building {
 	
 	Random r; // TODO remove
 	
-	private static Date timer;
-	
 	public Building(int numOfFloors, int numOfElevators) throws InvalidArgumentException{
 		FloorManager.initialize(numOfFloors);
 		
-		timer = new Date();
 		elevators = new ArrayList<Elevator>();
 		
 		for(int i=1; i <= numOfElevators; i++){
