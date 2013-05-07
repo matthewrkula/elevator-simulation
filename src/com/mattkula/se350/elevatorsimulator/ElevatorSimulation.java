@@ -11,6 +11,7 @@ public class ElevatorSimulation {
 			building.startSimulation();
 			building.sendRequestToElevator(1, 7);
 			building.sendRequestToElevator(1, 5);
+			building.sendRequestToElevator(1, 10);
 	}
 
 }

@@ -26,7 +26,7 @@ public class SimplePersonImpl implements Person{
 		return destination;
 	}
 	
-	private int getId(){
+	public int getId(){
 		return id;
 	}
 

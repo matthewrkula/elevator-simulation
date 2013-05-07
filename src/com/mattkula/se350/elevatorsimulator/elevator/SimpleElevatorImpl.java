@@ -114,17 +114,17 @@ public class SimpleElevatorImpl implements Elevator{
 	@Override
 	public void addDestination(int floorNum) {
 		
-		if(status == Elevator.Status.MOVING_UP && floorNum < getCurrentFloor())
+		if(getStatus() == Elevator.Status.MOVING_UP && floorNum < getCurrentFloor())
 			return;
 		
-		if(status == Elevator.Status.MOVING_DOWN && floorNum > getCurrentFloor())
+		if(getStatus() == Elevator.Status.MOVING_DOWN && floorNum > getCurrentFloor())
 			return;
 		
-		if(status == Elevator.Status.WAITING || status == Elevator.Status.WAITING_DEFAULT){
+		if(getStatus() == Elevator.Status.WAITING || getStatus() == Elevator.Status.WAITING_DEFAULT){
 			if(floorNum > currentFloor)
-				status = Elevator.Status.MOVING_UP;
+				setStatus(Elevator.Status.MOVING_UP);
 			else if(floorNum < currentFloor)
-				status = Elevator.Status.MOVING_DOWN;
+				setStatus(Elevator.Status.MOVING_DOWN);
 		}
 		
 		//TODO fix all below this
@@ -137,10 +137,20 @@ public class SimpleElevatorImpl implements Elevator{
 		}
 	}
 	
+	/**
+	 * Simulates Elevator moving to a floor. For each story that the elevator
+	 * is away from its next distance, the elevator sleeps for a second to simulate
+	 * the time it takes to move. It sets the elevator status depending on the 
+	 * direction it is moving. After it arrives at the next destination, it then 
+	 * calls arriveAtDestination() to make the person exchange at the current story.
+	 * 
+	 * @see #arriveAtDestination()
+	 * @throws InterruptedException if sleeping in Threads is interrupted
+	 */
 	private void moveToNextDest() throws InterruptedException{
 		
-		while(currentFloor != destinationList.get(0)){ // While we are not at our next destination
-			if(destinationList.get(0) > currentFloor){
+		while(getCurrentFloor() != destinationList.get(0)){ // While we are not at our next destination
+			if(destinationList.get(0) > getCurrentFloor()){
 				setStatus(Elevator.Status.MOVING_UP);
 				Thread.sleep(msPerFloor);		// Simulate delay in moving up a floor
 				
@@ -148,7 +158,7 @@ public class SimpleElevatorImpl implements Elevator{
 						Building.getTimeString(), elevatorNumber, currentFloor, destinationList.get(0), getRemainingDestinations());
 				currentFloor++;
 				
-			}else if(destinationList.get(0) < currentFloor){
+			}else if(destinationList.get(0) < getCurrentFloor()){
 				setStatus(Elevator.Status.MOVING_DOWN);
 				Thread.sleep(msPerFloor);		// Simulate delay in moving up a floor
 				
@@ -334,6 +344,10 @@ public class SimpleElevatorImpl implements Elevator{
 	 */
 	public int getDefaultFloor(){
 		return defaultFloor;
+	}
+	
+	public Elevator.Status getStatus(){
+		return status;
 	}
 	
 	private void setStatus(Elevator.Status newStatus){
