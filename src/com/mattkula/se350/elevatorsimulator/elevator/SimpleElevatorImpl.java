@@ -11,34 +11,44 @@ import com.mattkula.se350.elevatorsimulator.person.Person;
 /**
  * An implementation of the Elevator interface that creates a simple elevator.
  * 
+ * This class is an implementation of the Elevator interface. It responds to
+ * requests to move up and down sent from outside sources. At each destination,
+ * it takes time to open the doors, let people out and in, then close the doors.
+ * If it spends too much time without a destination, it times out and returns to
+ * whatever floor it considers the "default" floor.
+ * 
  * @author Matt
  * @since Version 1.0
  */
 public class SimpleElevatorImpl implements Elevator{
 	
 	/**
-	 * The number of millisecond it takes for the elevator doors to open
+	 * The number of millisecond it takes for the elevator doors to open.
+	 * Value: {@value}
 	 * @see #openDoors()
 	 */
-	private final int msToOpen = 1000;
+	public static final int msToOpen = 1000;
 	
 	/**
 	 * The number of millisecond it takes for the elevator doors to close.
+	 * Value: {@value}
 	 * @see #closeDoors()
 	 */
-	private final int msToClose = 1000;
+	public static final int msToClose = 1000;
 	
 	/**
 	 * The number of milliseconds it takes for the elevator to move up/down one floor.
+	 * Value: {@value}
 	 * @see #moveToNextDest()
 	 */
-	private final int msPerFloor = 1000;
+	public static final int msPerFloor = 1000;
 	
 	/**
-	 * The number of milliseconds before an elevator with no more destinations returns
+	 * The number of milliseconds before an elevator with no more destinations returns.
 	 * to its default floor.
+	 * Value: {@value}
 	 */
-	private final int msBeforeTimeout = 3000;
+	public static final int msBeforeTimeout = 3000;
 	
 	/**
 	 * The elevator's identification number in the building, used to reference each individual one.
@@ -91,16 +101,30 @@ public class SimpleElevatorImpl implements Elevator{
 	private FloorManager floorManager;
 	
 	public SimpleElevatorImpl(int elevatorNum, int defaultFloor) throws InvalidArgumentException{
-		elevatorNumber = elevatorNum;
+		floorManager = FloorManager.getInstance();
+		
+		if(elevatorNum < 1)
+			throw new InvalidArgumentException("Elevator number cannot be less than one.");
+		
+		if(defaultFloor < 1 || defaultFloor > floorManager.getNumberOfFloors())
+			throw new InvalidArgumentException("Default floor out of range.");
+		
+		setElevatorNum(elevatorNum);
 		destinationList = new ArrayList<Integer>();
 		peopleInElevator = new ArrayList<Person>();
-		floorManager = FloorManager.getInstance();
+		
 		setMaxCapacity(10);
 		setCurrentFloor(defaultFloor);
 		setDefaultFloor(defaultFloor);
 		setStatus(Elevator.Status.WAITING_DEFAULT);
 	}
 	
+	/**
+	 * Constructor that allows you to create a SimpleElevatorImpl which defaults
+	 * the defaultFloor member to 1.
+	 * @param elevatorNum - Id of the created Elevator
+	 * @throws InvalidArgumentException
+	 */
 	public SimpleElevatorImpl(int elevatorNum) throws InvalidArgumentException{
 		this(elevatorNum, 1);
 	}
@@ -348,6 +372,10 @@ public class SimpleElevatorImpl implements Elevator{
 	
 	public Elevator.Status getStatus(){
 		return status;
+	}
+	
+	private void setElevatorNum(int num){
+		elevatorNumber = num;
 	}
 	
 	private void setStatus(Elevator.Status newStatus){
