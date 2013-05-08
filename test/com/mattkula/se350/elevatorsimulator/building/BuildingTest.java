@@ -9,24 +9,16 @@ import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
 public class BuildingTest {
 
 	
-	@Test
-	public void testBuildingFloorArgument(){
-		try{
-			Building b = new Building(-1, 3);
-			fail("InvalidArgumentException expected");
-		}catch(InvalidArgumentException e){
-			e.printStackTrace();
-		}
+	@Test(expected=InvalidArgumentException.class)
+	public void testBuildingFloorArgument() throws InvalidArgumentException{
+
+		Building b = new Building(-1, 3);
+
 	}
 	
-	@Test
-	public void testBuildingElevatorArgument(){
-		try{
-			Building b = new Building(2, 0);
-			fail("InvalidArgumentException expected");
-		}catch(InvalidArgumentException e){
-			e.printStackTrace();
-		}
+	@Test(expected=InvalidArgumentException.class)
+	public void testBuildingElevatorArgument() throws InvalidArgumentException{
+		Building b = new Building(2, 0);
 	}
 	
 	@Test
@@ -34,30 +26,20 @@ public class BuildingTest {
 		try{
 			Building goodBuilding = new Building(15, 6);
 		}catch(InvalidArgumentException e){
-			e.printStackTrace();
+			fail("Building should have been completed");
 		}
 	}
 	
-	@Test
-	public void testSendingRequestElevatorArgumentFail(){
-		try{
-			Building goodBuilding = new Building(15, 6);
-			goodBuilding.sendRequestToElevator(-1, 5);
-			fail("InvalidArgumentException expected");
-		}catch(InvalidArgumentException e){
-			e.printStackTrace();
-		}
+	@Test(expected=InvalidArgumentException.class)
+	public void testSendingRequestElevatorArgumentFail() throws InvalidArgumentException{
+		Building goodBuilding = new Building(15, 6);
+		goodBuilding.sendRequestToElevator(-1, 5);
 	}
 	
-	@Test
-	public void testSendingRequestFloorArgumentFail(){
-		try{
+	@Test(expected=InvalidArgumentException.class)
+	public void testSendingRequestFloorArgumentFail() throws InvalidArgumentException{
 			Building goodBuilding = new Building(15, 6);
 			goodBuilding.sendRequestToElevator(3, 0);
-			fail("InvalidArgumentException expected");
-		}catch(InvalidArgumentException e){
-			e.printStackTrace();
-		}
 	}
 	
 	@Test
@@ -66,7 +48,7 @@ public class BuildingTest {
 			Building goodBuilding = new Building(15, 6);
 			goodBuilding.sendRequestToElevator(3, 10);
 		}catch(InvalidArgumentException e){
-			e.printStackTrace();
+			fail("InvalidArgumentException should not have been thrown");
 		}
 	}
 

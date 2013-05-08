@@ -7,6 +7,7 @@ package com.mattkula.se350.elevatorsimulator.exceptions;
  *
  */
 
+@SuppressWarnings("serial")
 public class InvalidArgumentException extends Exception {
 	
 	public InvalidArgumentException(String s){

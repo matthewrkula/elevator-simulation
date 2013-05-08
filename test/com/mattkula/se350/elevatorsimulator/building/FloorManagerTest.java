@@ -1,8 +1,7 @@
 package com.mattkula.se350.elevatorsimulator.building;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class FloorManagerTest {

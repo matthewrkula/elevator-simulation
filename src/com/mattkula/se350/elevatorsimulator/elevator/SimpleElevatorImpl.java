@@ -134,9 +134,13 @@ public class SimpleElevatorImpl implements Elevator{
 	 * from levels above it's current position will be accepted. If the elevator is going down, only requests
 	 * from levels below it will be accepted. Keeps all pending destinations sorted according to direction.
 	 * @param floorNum - The story that is to be added to the elevator's pending destination list
+	 * @throws InvalidArgumentException 
 	 */
 	@Override
-	public void addDestination(int floorNum) {
+	public void addDestination(int floorNum) throws InvalidArgumentException{
+		
+		if(floorNum < 1 || floorNum > FloorManager.getInstance().getNumberOfFloors())
+			throw new InvalidArgumentException("Elevator being sent out of floor range.");
 		
 		if(getStatus() == Elevator.Status.MOVING_UP && floorNum < getCurrentFloor()){
 			System.out.printf("%s Elevator %d request for %d not in direction of travel - ignoring\n", 
@@ -332,7 +336,7 @@ public class SimpleElevatorImpl implements Elevator{
 			
 		}
 		
-		}catch(InterruptedException e){
+		}catch(InterruptedException | InvalidArgumentException e){
 			e.printStackTrace();
 		}
 	}

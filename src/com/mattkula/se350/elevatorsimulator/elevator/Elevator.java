@@ -1,5 +1,7 @@
 package com.mattkula.se350.elevatorsimulator.elevator;
 
+import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
+
 /**
  * An Elevator interface that defines behavior for every elevator implementation.
  * 
@@ -23,8 +25,9 @@ public interface Elevator extends Runnable{
 	/**
 	 * Adds a destination to the Elevator implementation.
 	 * @param floorNum - the floor the elevator should stop at. 
+	 * @throws InvalidArgumentException if the floor is not in the building
 	 */
-	public void addDestination(int floorNum);
+	public void addDestination(int floorNum) throws InvalidArgumentException;
 	
     /**
      * Indicates the current floor that the elevator is stopped at or passing.
