@@ -7,10 +7,24 @@ import com.mattkula.se350.elevatorsimulator.elevator.Elevator;
 import com.mattkula.se350.elevatorsimulator.elevator.ElevatorFactory;
 import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
 
+/**
+ * Building the container for the entire Elevator simulation, creating and holding all of the elevators
+ * and initializing the FloorManager.
+ * 
+ * @author Matt
+ *
+ */
 public class Building {
 	
 	ArrayList<Elevator> elevators;
 	
+	/**
+	 * Creates a Building instance which creates/holds all of the elevators, initializes 
+	 * the FloorManager, and then begins the simulation by starting a thread for each elevator.
+	 * @param numOfFloors - Number of desired floors in the simulation
+	 * @param numOfElevators - Number of desired elevators in the simulation
+	 * @throws InvalidArgumentException when floors < 2 or number of elevators < 1
+	 */
 	public Building(int numOfFloors, int numOfElevators) throws InvalidArgumentException{
 		if(numOfFloors < 1)
 			throw new InvalidArgumentException("Building must have two or more floors for an elevator.");
@@ -30,7 +44,10 @@ public class Building {
 		startSimulation();
 	}
 	
-	public void startSimulation(){
+	/**
+	 * Private method that starts all of the Elevator threads
+	 */
+	private void startSimulation(){
 		for(Elevator e : elevators){
 			Thread t = new Thread(e);
 			t.start();

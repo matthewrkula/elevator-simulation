@@ -1,5 +1,7 @@
 package com.mattkula.se350.elevatorsimulator.building;
 
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
 import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
@@ -11,6 +13,7 @@ public class BuildingTest {
 	public void testBuildingFloorArgument(){
 		try{
 			Building b = new Building(-1, 3);
+			fail("InvalidArgumentException expected");
 		}catch(InvalidArgumentException e){
 			e.printStackTrace();
 		}
@@ -20,6 +23,7 @@ public class BuildingTest {
 	public void testBuildingElevatorArgument(){
 		try{
 			Building b = new Building(2, 0);
+			fail("InvalidArgumentException expected");
 		}catch(InvalidArgumentException e){
 			e.printStackTrace();
 		}
@@ -39,6 +43,7 @@ public class BuildingTest {
 		try{
 			Building goodBuilding = new Building(15, 6);
 			goodBuilding.sendRequestToElevator(-1, 5);
+			fail("InvalidArgumentException expected");
 		}catch(InvalidArgumentException e){
 			e.printStackTrace();
 		}
@@ -49,6 +54,7 @@ public class BuildingTest {
 		try{
 			Building goodBuilding = new Building(15, 6);
 			goodBuilding.sendRequestToElevator(3, 0);
+			fail("InvalidArgumentException expected");
 		}catch(InvalidArgumentException e){
 			e.printStackTrace();
 		}

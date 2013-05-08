@@ -176,19 +176,21 @@ public class SimpleElevatorImpl implements Elevator{
 		while(getCurrentFloor() != destinationList.get(0)){ // While we are not at our next destination
 			if(destinationList.get(0) > getCurrentFloor()){
 				setStatus(Elevator.Status.MOVING_UP);
-				Thread.sleep(msPerFloor);		// Simulate delay in moving up a floor
 				
 				System.out.printf("%s Elevator %d passing %d on way up to Floor %d. Remaining Destinations: %s\n", 
 						Building.getTimeString(), elevatorNumber, currentFloor, destinationList.get(0), getRemainingDestinations());
 				currentFloor++;
 				
+				Thread.sleep(msPerFloor);		// Simulate delay in moving up a floor
+				
 			}else if(destinationList.get(0) < getCurrentFloor()){
 				setStatus(Elevator.Status.MOVING_DOWN);
-				Thread.sleep(msPerFloor);		// Simulate delay in moving up a floor
 				
 				System.out.printf("%s Elevator %d passing %d on way down to Floor %d. Remaining Destinations: %s\n", 
 						Building.getTimeString(), elevatorNumber, currentFloor, destinationList.get(0), getRemainingDestinations());
 				currentFloor--;
+				
+				Thread.sleep(msPerFloor);		// Simulate delay in moving up a floor
 			}
 		}
 		
@@ -370,6 +372,10 @@ public class SimpleElevatorImpl implements Elevator{
 		return defaultFloor;
 	}
 	
+	/**
+	 * Get the current status of the elevator.
+	 * @return The elevator's current status
+	 */
 	public Elevator.Status getStatus(){
 		return status;
 	}
