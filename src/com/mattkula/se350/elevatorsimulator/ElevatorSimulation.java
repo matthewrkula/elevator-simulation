@@ -13,15 +13,38 @@ import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
  *
  */
 public class ElevatorSimulation {
-	//TODO REMOVE THROWS EXCEPTION
+
 	public static void main(String[] args){
 		try{
 			Building building = new Building(15, 6);
 			
-			building.sendRequestToElevator(1, 7);
-			building.sendRequestToElevator(1, 5);
+			Thread.sleep(1000);
+			building.sendRequestToElevator(1, 11);
+			Thread.sleep(1000);
+			
+			building.sendRequestToElevator(2, 14);
+			Thread.sleep(1000);
+			
+			building.sendRequestToElevator(2, 13);
+			Thread.sleep(1000);
+			
+			building.sendRequestToElevator(2, 15);
+			
+			Thread.sleep(30000);
+			
 			building.sendRequestToElevator(1, 10);
+			Thread.sleep(1000);
+			
+			building.sendRequestToElevator(1, 1);
+			Thread.sleep(12000);
+			building.sendRequestToElevator(1, 2);
+			building.sendRequestToElevator(1, 5);
+			building.sendRequestToElevator(1, 3);
+			
+			
 		}catch(InvalidArgumentException e){
+			System.out.println(e.getMessage());
+		}catch(InterruptedException e){
 			System.out.println(e.getMessage());
 		}
 	}

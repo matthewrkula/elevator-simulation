@@ -138,11 +138,17 @@ public class SimpleElevatorImpl implements Elevator{
 	@Override
 	public void addDestination(int floorNum) {
 		
-		if(getStatus() == Elevator.Status.MOVING_UP && floorNum < getCurrentFloor())
+		if(getStatus() == Elevator.Status.MOVING_UP && floorNum < getCurrentFloor()){
+			System.out.printf("%s Elevator %d request for %d not in direction of travel - ignoring\n", 
+					Building.getTimeString(), getElevatorNumber(), floorNum);
 			return;
+		}
 		
-		if(getStatus() == Elevator.Status.MOVING_DOWN && floorNum > getCurrentFloor())
+		if(getStatus() == Elevator.Status.MOVING_DOWN && floorNum > getCurrentFloor()){
+			System.out.printf("%s Elevator %d request for %d not in direction of travel - ignoring\n", 
+					Building.getTimeString(), getElevatorNumber(), floorNum);
 			return;
+		}
 		
 		if(getStatus() == Elevator.Status.WAITING || getStatus() == Elevator.Status.WAITING_DEFAULT){
 			if(floorNum > currentFloor)
@@ -155,7 +161,7 @@ public class SimpleElevatorImpl implements Elevator{
 		destinationList.add(floorNum);
 		if(status == Elevator.Status.MOVING_UP)
 			Collections.sort(destinationList);
-		else if(status == Elevator.Status.MOVING_DOWN){
+		else{
 			Collections.sort(destinationList);
 			Collections.reverse(destinationList);
 		}
@@ -283,6 +289,12 @@ public class SimpleElevatorImpl implements Elevator{
 		}
 	}
 
+	/**
+	 * Contains the main logic loop of the elevator. Constantly runs
+	 * checking if it has any destinations in the queue. If not, it waits
+	 * until it is notified. After a certain amount of idle time, it will
+	 * go back down to its default floor. 
+	 */
 	@Override
 	public void run() {
 		try{
@@ -380,14 +392,27 @@ public class SimpleElevatorImpl implements Elevator{
 		return status;
 	}
 	
+	/**
+	 * Set the number of the elevator instance.
+	 * @param newStatus - The status of the elevator
+	 */
 	private void setElevatorNum(int num){
 		elevatorNumber = num;
 	}
 	
+	/**
+	 * Set the status of the elevator instance.
+	 * @param newStatus - The status of the elevator
+	 */
 	private void setStatus(Elevator.Status newStatus){
 		this.status = newStatus;
 	}
 	
+	/**
+	 * Sets the maximum capacity of the elevator.
+	 * @param capacity - The maximum capacity of the elevator
+	 * @throws InvalidArgumentException if the capacity is less than 1.
+	 */
 	private void setMaxCapacity(int capacity) throws InvalidArgumentException{
 		if(capacity < 1)
 			throw new InvalidArgumentException("Elevator cannot hold any people");
@@ -395,6 +420,11 @@ public class SimpleElevatorImpl implements Elevator{
 		this.maxCapacity = capacity;
 	}
 	
+	/**
+	 * Sets the default floor of the elevator
+	 * @param floorNum - The floor the elevator should return to after timing out
+	 * @throws InvalidArgumentException if the floor < 0 or the floor > than the number of floors in the building.
+	 */
 	private void setDefaultFloor(int floorNum) throws InvalidArgumentException{
 		if(floorNum < 0 || floorNum > floorManager.getNumberOfFloors())
 			throw new InvalidArgumentException("Elevator's default floor outside of building constraints.");
@@ -402,6 +432,11 @@ public class SimpleElevatorImpl implements Elevator{
 		this.defaultFloor = floorNum;
 	}
 	
+	/**
+	 * Sets the current floor of the elevator, used only at initialization
+	 * @param floorNum - Story to set the elevator to
+	 * @throws InvalidArgumentException if the floor < 0 or the floor > than the number of floors in the building.
+	 */
 	private void setCurrentFloor(int floorNum) throws InvalidArgumentException{
 		if(floorNum < 0 || floorNum > floorManager.getNumberOfFloors())
 			throw new InvalidArgumentException("Elevator's current floor outside of building constraints.");
