@@ -1,6 +1,6 @@
 package com.mattkula.se350.elevatorsimulator.elevator;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -16,6 +16,7 @@ public class SimpleElevatorImplTest {
 	static FloorManager manager;
 	static ArrayList<Elevator> elevators;
 	
+	//Utility method to send requests to elevatos
 	public void sendRequestToElevator(int elevatorId, int story) throws InvalidArgumentException{
 		Elevator e = elevators.get(elevatorId - 1);
 		synchronized(e){
@@ -38,16 +39,19 @@ public class SimpleElevatorImplTest {
 		
 	}
 	
+	//Tests adding a bad default floor using the constructor
 	@Test(expected=InvalidArgumentException.class)
 	public void testElevatorDefaultFloorFail() throws InvalidArgumentException{
 		Elevator e = new SimpleElevatorImpl(5, 30);
 	}
 
+	//Tests adding a bad default floor to the pending requests of an elevator
 	@Test(expected=InvalidArgumentException.class)
 	public void testElevatorRefusesBadDataFailure() throws InvalidArgumentException{
 		sendRequestToElevator(1, 20);
 	}
 	
+	//Tests movement of the elevator, taking approximately one second per floor
 	@Test
 	public void testElevatorApprxOneSecondPerFloor(){
 		try{
@@ -62,6 +66,7 @@ public class SimpleElevatorImplTest {
 		}
 	}
 	
+	//Tests ignoring of requests while moving in the opposite direction
 	@Test
 	public void testOppositeDirectionIgnored(){
 		try{
@@ -79,6 +84,7 @@ public class SimpleElevatorImplTest {
 		}
 	}
 	
+	//Tests that the elevator times out and returns to default floor after some time
 	@Test
 	public void testElevatorTimeout(){
 		try{
@@ -96,6 +102,7 @@ public class SimpleElevatorImplTest {
 		}
 	}
 	
+	//Tests that an elevator organizes requests out of order in the same direction
 	@Test
 	public void testElevatorOrganizesRequestsInOrder(){
 		try{
