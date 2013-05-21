@@ -1,0 +1,31 @@
+{
+	"duration": 1,
+	"scale": 2,
+
+	"floors":15,
+	"elevators":4,
+	"max_persons":12,
+	"ms_per_floor":1000,
+	"ms_door_operation":2200,
+	"default_elevator_floor":1,
+
+	"persons_per_minute":4,
+	"start_dest_pct":[
+		 45,
+		 7,
+		 3,
+		 4,
+		 5,
+		 5,
+		 6,
+		 3,
+		 7,
+		 3,
+		 2,
+		 5,
+		 2,
+		 2,
+		 1
+	]
+
+}

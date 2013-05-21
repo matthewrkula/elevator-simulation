@@ -2,6 +2,7 @@ package com.mattkula.se350.elevatorsimulator.building;
 
 import java.util.ArrayList;
 
+import com.mattkula.se350.elevatorsimulator.elevator.Elevator;
 import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
 import com.mattkula.se350.elevatorsimulator.person.Person;
 
@@ -49,8 +50,8 @@ public class FloorManager {
 	 * @param numOfFloors is the number of floors the building has.
 	 */
 	public synchronized static void initialize(int numOfFloors){
-//		if(floorManager != null)
-//			throw new IllegalStateException("Floor Manager already initialized");
+		if(floorManager != null)
+			throw new IllegalStateException("Floor Manager already initialized");
 		
 		floorManager = new FloorManager(numOfFloors);
 	}
@@ -76,7 +77,17 @@ public class FloorManager {
 		if(story < 1 || story > getInstance().getNumberOfFloors())
 			throw new InvalidArgumentException("Person being added out of floor range.");
 		
-		floors.get(story - 1).addPerson(person);
+		synchronized(floors.get(story - 1)){
+			floors.get(story - 1).addPerson(person);
+		}
+	}
+	
+	public void addPeopleToElevator(int story, Elevator e) throws InvalidArgumentException{
+		floors.get(story - 1).addPeopleToElevator(e);
+	}
+	
+	public void pressControlBoxAt(int story, int direction) throws InvalidArgumentException{
+		floors.get(story - 1).pressControlBox(direction);
 	}
 	
 	/**

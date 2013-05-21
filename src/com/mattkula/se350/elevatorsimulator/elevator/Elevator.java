@@ -1,6 +1,7 @@
 package com.mattkula.se350.elevatorsimulator.elevator;
 
 import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
+import com.mattkula.se350.elevatorsimulator.person.Person;
 
 /**
  * An Elevator interface that defines behavior for every elevator implementation.
@@ -19,7 +20,7 @@ public interface Elevator extends Runnable{
 	 *@see #getStatus()
 	 */
 	enum Status{
-		WAITING, WAITING_DEFAULT, MOVING_UP, MOVING_DOWN, DOORS_OPENING, DOORS_CLOSING, DOORS_OPENED
+		WAITING, WAITING_DEFAULT, MOVING_UP, MOVING_DOWN
 	}
 	
 	/**
@@ -34,6 +35,14 @@ public interface Elevator extends Runnable{
      * @return The current floor that the elevator is stopped at or passing.
      */
 	public int getCurrentFloor();
+	
+	/**
+	 * Adds a Person implementation to the elevator.
+	 * @param p - The person implementation to add
+	 * @return true if there is room for the person and they were added, false if no room left and they were not added
+	 * @throws InvalidArgumentException
+	 */
+	public boolean addPerson(Person p) throws InvalidArgumentException;
 	
 	/**
      * Gets information about the pending requests on the Elevator instance.

@@ -32,7 +32,7 @@ public class SimpleElevatorImplTest {
 		elevators = new ArrayList<Elevator>();
 		
 		for(int i = 1; i <= 4; i ++){
-			elevators.add(ElevatorFactory.build(i));
+			elevators.add(ElevatorFactory.build(i, 1, 1000, 2200));
 			Thread t = new Thread(elevators.get(i-1));
 			t.start();
 		}
@@ -42,7 +42,7 @@ public class SimpleElevatorImplTest {
 	//Tests adding a bad default floor using the constructor
 	@Test(expected=InvalidArgumentException.class)
 	public void testElevatorDefaultFloorFail() throws InvalidArgumentException{
-		Elevator e = new SimpleElevatorImpl(5, 30);
+		Elevator e = new SimpleElevatorImpl(5, 30, 1000, 2200);
 	}
 
 	//Tests adding a bad default floor to the pending requests of an elevator

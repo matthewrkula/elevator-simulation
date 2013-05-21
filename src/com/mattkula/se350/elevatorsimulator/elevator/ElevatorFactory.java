@@ -16,8 +16,8 @@ public class ElevatorFactory {
 	 * @return Best fit implementation of an Elevator
 	 * @throws InvalidArgumentException if the elevatorNum < 1
 	 */
-	public static Elevator build(int elevatorNum) throws InvalidArgumentException{
-		return new SimpleElevatorImpl(elevatorNum);
+	public static Elevator build(int elevatorNum, int defaultFloor, int msPerFloor, int msDoorOperation) throws InvalidArgumentException{
+		return new SimpleElevatorImpl(elevatorNum, defaultFloor, msPerFloor, msDoorOperation);
 	}
 
 }

@@ -23,25 +23,19 @@ import com.mattkula.se350.elevatorsimulator.person.Person;
 public class SimpleElevatorImpl implements Elevator{
 	
 	/**
-	 * The number of millisecond it takes for the elevator doors to open.
-	 * Value: {@value}
-	 * @see #openDoors()
+	 * The number of milliseconds it takes for the elevator to do its exchange at a floor.
+	 * This exchange includes opening doors, adding people, removing people, and closing
+	 * doors. 
+	 * @see #arriveAtDestination()
 	 */
-	public static final int msToOpen = 1000;
-	
-	/**
-	 * The number of millisecond it takes for the elevator doors to close.
-	 * Value: {@value}
-	 * @see #closeDoors()
-	 */
-	public static final int msToClose = 1000;
+	private int msDoorOperations;
 	
 	/**
 	 * The number of milliseconds it takes for the elevator to move up/down one floor.
-	 * Value: {@value}
+	 * Used to simulate the time it takes for elevator to move floors. 
 	 * @see #moveToNextDest()
 	 */
-	public static final int msPerFloor = 1000;
+	private int msPerFloor;
 	
 	/**
 	 * The number of milliseconds before an elevator with no more destinations returns.
@@ -93,6 +87,11 @@ public class SimpleElevatorImpl implements Elevator{
 	 */
 	private int defaultFloor;
 	
+	/**
+	 * Current Status of the elevator, held in an Enum
+	 * @see #getStatus()
+	 * @see #setStatus(com.mattkula.se350.elevatorsimulator.elevator.Elevator.Status)
+	 */
 	private Elevator.Status status;
 	
 	/**
@@ -100,7 +99,7 @@ public class SimpleElevatorImpl implements Elevator{
 	 */
 	private FloorManager floorManager;
 	
-	public SimpleElevatorImpl(int elevatorNum, int defaultFloor) throws InvalidArgumentException{
+	public SimpleElevatorImpl(int elevatorNum, int defaultFloor, int msPerFloor, int msDoorOperation) throws InvalidArgumentException{
 		floorManager = FloorManager.getInstance();
 		
 		if(elevatorNum < 1)
@@ -117,16 +116,8 @@ public class SimpleElevatorImpl implements Elevator{
 		setCurrentFloor(defaultFloor);
 		setDefaultFloor(defaultFloor);
 		setStatus(Elevator.Status.WAITING_DEFAULT);
-	}
-	
-	/**
-	 * Constructor that allows you to create a SimpleElevatorImpl which defaults
-	 * the defaultFloor member to 1.
-	 * @param elevatorNum - Id of the created Elevator
-	 * @throws InvalidArgumentException
-	 */
-	public SimpleElevatorImpl(int elevatorNum) throws InvalidArgumentException{
-		this(elevatorNum, 1);
+		setMsDoorOperations(msDoorOperation);
+		setMsPerFloor(msPerFloor);
 	}
 
 	/**
@@ -161,8 +152,8 @@ public class SimpleElevatorImpl implements Elevator{
 				setStatus(Elevator.Status.MOVING_DOWN);
 		}
 		
-		//TODO fix all below this
-		destinationList.add(floorNum);
+		if(!destinationList.contains(floorNum))
+			destinationList.add(floorNum);
 		if(status == Elevator.Status.MOVING_UP)
 			Collections.sort(destinationList);
 		else{
@@ -180,8 +171,9 @@ public class SimpleElevatorImpl implements Elevator{
 	 * 
 	 * @see #arriveAtDestination()
 	 * @throws InterruptedException if sleeping in Threads is interrupted
+	 * @throws InvalidArgumentException 
 	 */
-	private void moveToNextDest() throws InterruptedException{
+	private void moveToNextDest() throws InterruptedException, InvalidArgumentException{
 		
 		while(getCurrentFloor() != destinationList.get(0)){ // While we are not at our next destination
 			if(destinationList.get(0) > getCurrentFloor()){
@@ -191,7 +183,7 @@ public class SimpleElevatorImpl implements Elevator{
 						Building.getTimeString(), elevatorNumber, currentFloor, destinationList.get(0), getRemainingDestinations());
 				currentFloor++;
 				
-				Thread.sleep(msPerFloor);		// Simulate delay in moving up a floor
+				Thread.sleep(getMsPerFloor() / Building.getTimeScale());		// Simulate delay in moving up a floor
 				
 			}else if(destinationList.get(0) < getCurrentFloor()){
 				setStatus(Elevator.Status.MOVING_DOWN);
@@ -200,7 +192,7 @@ public class SimpleElevatorImpl implements Elevator{
 						Building.getTimeString(), elevatorNumber, currentFloor, destinationList.get(0), getRemainingDestinations());
 				currentFloor--;
 				
-				Thread.sleep(msPerFloor);		// Simulate delay in moving up a floor
+				Thread.sleep(getMsPerFloor() / Building.getTimeScale());		// Simulate delay in moving up a floor
 			}
 		}
 		
@@ -217,45 +209,41 @@ public class SimpleElevatorImpl implements Elevator{
 	 * @see #letPeopleIn(int)
 	 * @see #closeDoors()
 	 * @param floorNum
+	 * @throws InvalidArgumentException 
 	 */
-	private void arriveAtDestination(){
+	private void arriveAtDestination() throws InvalidArgumentException{
 		System.out.printf("%s Elevator %d arrived at Floor %d.\n", Building.getTimeString(), elevatorNumber, currentFloor);
 		destinationList.remove(0);
-		openDoors();
-		letPeopleOut();
-		letPeopleIn();
-		closeDoors();
-	}
-	
-	/**
-	 * Delays the Thread for a certain number of milliseconds simulating the time
-	 * it takes for elevator doors to open. Called upon arrival at each destination.
-	 * 
-	 * @see #msToOpen
-	 */
-	private void openDoors(){
-		try{
-			System.out.printf("%s Elevator %d opening doors at Floor %d...\n", Building.getTimeString(), elevatorNumber, currentFloor);
-			setStatus(Elevator.Status.DOORS_OPENING);
-			Thread.sleep(msToOpen);
-			setStatus(Elevator.Status.DOORS_OPENED);
-		}catch(InterruptedException e){
-			e.printStackTrace();
+		if(destinationList.size() == 0){
+			setStatus(Elevator.Status.WAITING);
 		}
+		doFloorExchange();
 	}
 	
 	/**
-	 * Delays the Thread for a certain number of milliseconds simulating the time
-	 * it takes for elevator doors to close. Called upon arrival at each destination.
-	 * 
-	 * @see #msToClose
+	 * Called whenever an elevator arrives at a destination on its destination list. 
+	 * Simulates the opening of doors, allows people to come in and out, then closes the doors.
+	 * It sleeps for a specified number of seconds to simulate the time it takes for all of that
+	 * to take place. 
+	 * @throws InvalidArgumentException - for invalid data specified by the error message
 	 */
-	private void closeDoors(){
+	private void doFloorExchange() throws InvalidArgumentException{
 		try{
+			//Open the Doors
+			System.out.printf("%s Elevator %d opening doors at Floor %d...\n", Building.getTimeString(), elevatorNumber, currentFloor);
+			
+			//Exchange of people
+			letPeopleOut();
+			letPeopleIn();
+			
+			System.out.printf("%s Elevator %d letting people exchange at Floor %d. People Left: %s\n", Building.getTimeString(), elevatorNumber, 
+					currentFloor, getPeopleInElevator());
+			//Simulates exchange time
+			Thread.sleep(getMsDoorOperations() / Building.getTimeScale());
+			
+			//Close the doors
 			System.out.printf("%s Elevator %d closing doors at Floor %d. Remaining destinations are %s\n", 
 					Building.getTimeString(), elevatorNumber, currentFloor, getRemainingDestinations());
-			setStatus(Elevator.Status.DOORS_CLOSING);
-			Thread.sleep(msToClose);
 		}catch(InterruptedException e){
 			e.printStackTrace();
 		}
@@ -266,31 +254,48 @@ public class SimpleElevatorImpl implements Elevator{
 	 * to the floor.
 	 */
 	private void letPeopleOut(){
-		//TODO Add people to floor, remove from elevator
-//		for(Person person : peopleInElevator){
-//			if(person.getDestination() == getCurrentFloor())
-//				floorManager.addPersonToFloor(getCurrentFloor(), person);
-//			
-//		}
 		
-		try {
-			Thread.sleep(1500);
-		} catch (InterruptedException e) {
+		ArrayList<Person> peopleToRemove = new ArrayList<Person>();
+		
+		try{
+			for(int i = 0; i < peopleInElevator.size(); i++){
+				Person person = peopleInElevator.get(i);
+				if(person.getDestination() == getCurrentFloor()){
+					floorManager.addPersonToFloor(getCurrentFloor(), person);
+					peopleToRemove.add(peopleInElevator.get(i));
+				}
+				
+			}
+			
+			peopleInElevator.removeAll(peopleToRemove);
+			
+		}catch(InvalidArgumentException e){
 			e.printStackTrace();
 		}
+		
 	}
 	
 	/**
 	 * Moves people who are on the current floor trying to get elsewhere onto the elevator.
+	 * @throws InvalidArgumentException 
 	 */
-	private void letPeopleIn(){
-		//TODO Remove people from floor, add to elevator
+	private void letPeopleIn() throws InvalidArgumentException{
+		FloorManager.getInstance().addPeopleToElevator(getCurrentFloor(), this);
+	}
+	
+	/**
+	 * Adds a person to the instance of the elevator.
+	 * @throws InvalidArgumentException if the destination is not a legal floor
+	 */
+	public boolean addPerson(Person p) throws InvalidArgumentException {
 		
-		try {
-			Thread.sleep(1500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if(peopleInElevator.size() < getMaxCapacity()){
+			peopleInElevator.add(p);
+			addDestination(p.getDestination());
+			return true;
 		}
+		
+		return false;
 	}
 
 	/**
@@ -303,14 +308,14 @@ public class SimpleElevatorImpl implements Elevator{
 	public void run() {
 		try{
 			
-		while(true){
+		while(Building.isRunning()){
 				if(destinationList.size() == 0){	// If there are no more pending requests
 					
 					if(getCurrentFloor() != getDefaultFloor()){ // If the elevator is not on it's default floor
 						synchronized(this){
 							
 							System.out.printf("%s Elevator %d waiting for timeout.\n", Building.getTimeString(), getElevatorNumber());
-							setStatus(Elevator.Status.WAITING_DEFAULT);
+							setStatus(Elevator.Status.WAITING);
 							this.wait(msBeforeTimeout);	// Wait for timeout or new request
 							
 							if(destinationList.size() != 0) // If no new requests were added
@@ -368,6 +373,23 @@ public class SimpleElevatorImpl implements Elevator{
 		return s + "]";
 	}
 	
+	/**
+	 * Get a string containing ids of the Person objects in the elevator, useful for logging.
+	 * @return A string containing the ids of the Person objects in the elevator.
+	 */
+	public String getPeopleInElevator(){
+		String s = "[";
+		int peopleLeft = peopleInElevator.size();
+		for(int i = 0; i < peopleLeft - 1; i++){
+			s += peopleInElevator.get(i).getId() + ", ";
+		}
+		
+		if(peopleLeft > 0){
+			s += peopleInElevator.get(peopleLeft - 1).getId();
+		}
+		return s + "]";
+	}
+	
 	public int getElevatorNumber(){
 		return elevatorNumber;
 	}
@@ -394,6 +416,23 @@ public class SimpleElevatorImpl implements Elevator{
 	 */
 	public Elevator.Status getStatus(){
 		return status;
+	}
+	
+	/**
+	 * Gets the number of milliseconds it takes to open the doors, let people
+	 * in and out, then close the doors. 
+	 * @return The time the elevator takes at each destination floor
+	 */
+	public int getMsDoorOperations(){
+		return msDoorOperations;
+	}
+	
+	/**
+	 * Gets the number of milliseconds it takes to move floors.
+	 * @return The number of milliseconds it takes to move floors.
+	 */
+	public int getMsPerFloor(){
+		return msPerFloor;
 	}
 	
 	/**
@@ -447,5 +486,28 @@ public class SimpleElevatorImpl implements Elevator{
 		
 		this.currentFloor = floorNum;
 	}
+	
+	/**
+	 * Sets the time the elevator takes at each destination floor, used only at initialization. 
+	 * @param newMsDoorOperations - The time to set the door operations speed to
+	 * @throws InvalidArgumentException if the input is < 0
+	 */
+	private void setMsDoorOperations(int newMsDoorOperations) throws InvalidArgumentException{
+		if(newMsDoorOperations < 0)
+			throw new InvalidArgumentException("Elevator needs a positive door operations time.");
+		
+		msDoorOperations = newMsDoorOperations;
+	}
 
+	/**
+	 * Sets the time the elevator takes to travel up/down one floor in milliseconds.
+	 * @param newMsPerFloor - The time to set the elevator speed to.
+	 * @throws InvalidArgumentException if the input is < 0
+	 */
+	private void setMsPerFloor(int newMsPerFloor) throws InvalidArgumentException{
+		if(newMsPerFloor < 0)
+			throw new InvalidArgumentException("Elevator needs a positive time per floor while moving.");
+		
+		msPerFloor = newMsPerFloor;
+	}
 }

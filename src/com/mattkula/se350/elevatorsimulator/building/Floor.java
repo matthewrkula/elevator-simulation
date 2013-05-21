@@ -1,5 +1,7 @@
 package com.mattkula.se350.elevatorsimulator.building;
 
+import com.mattkula.se350.elevatorsimulator.elevator.Elevator;
+import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
 import com.mattkula.se350.elevatorsimulator.person.Person;
 
 /**
@@ -19,9 +21,19 @@ public interface Floor {
 	public void addPerson(Person person);
 	
 	/**
+	 * Adds all people on this floor that want to go in the direction of
+	 * the elevator to said elevator.
+	 * @param e - The elevator to add people to if they want to go in the same direction
+	 * @throws InvalidArgumentException if input data is invalid - specified by error message
+	 */
+	public void addPeopleToElevator(Elevator e) throws InvalidArgumentException;
+	
+	/**
 	 * Get the height/id of the floor. The story of the building which it represents.
 	 * @return The story fo the building which the Floor represents.
 	 */
 	public int getStory();
+	
+	public void pressControlBox(int direction) throws InvalidArgumentException;
 
 }

@@ -2,6 +2,9 @@ package com.mattkula.se350.elevatorsimulator.building;
 
 import java.util.ArrayList;
 
+import com.mattkula.se350.elevatorsimulator.elevator.Elevator;
+import com.mattkula.se350.elevatorsimulator.elevatorcontroller.ElevatorController;
+import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
 import com.mattkula.se350.elevatorsimulator.person.Person;
 
 /**
@@ -24,9 +27,16 @@ public class SimpleFloorImpl implements Floor{
 	 */
 	ArrayList<Person> people;
 	
+	ControlBox controlBox;
+	
+	/**
+	 * Constructor for a Simple Floor. 
+	 * @param story - The story that this floor will simulate
+	 */
 	public SimpleFloorImpl(int story){
 		setStory(story);
 		people = new ArrayList<Person>();
+		controlBox = new ControlBox(getStory());
 	}
 	
 	/**
@@ -38,7 +48,73 @@ public class SimpleFloorImpl implements Floor{
 			people.add(person);
 		}
 	}
+
+	/**
+	 * Removes a Person from this floor
+	 * @param id - Id of the person to remove
+	 */
+	public void removePerson(int id) {
+		synchronized(this){
+			for(int i = 0; i < people.size(); i++){
+				if(people.get(i).getId() == id){
+					people.remove(i);
+				}
+			}
+		}
+	}
 	
+	/**
+	 * Method to add people from this floor to an elevator that is going
+	 * in the people's desired direction. Only adds them if the elevator is 
+	 * not at full capacity yet.
+	 * @param e - The elevator instance to add the people to.
+	 */
+	@Override
+	public void addPeopleToElevator(Elevator e) throws InvalidArgumentException {
+		synchronized(this){
+			ArrayList<Person> peopleToRemove = new ArrayList<Person>();
+			
+			for(int i = 0; i < people.size(); i++){
+				
+				if(e.getStatus() == Elevator.Status.MOVING_UP){
+					
+					if(people.get(i).getDestination() > this.story){
+						if(e.addPerson(people.get(i))){
+							peopleToRemove.add(people.get(i));
+						}else{
+							break;	//Not enough room
+						}
+					}
+					
+				}else if(e.getStatus() == Elevator.Status.MOVING_DOWN){
+					
+					if(people.get(i).getDestination() < this.story){
+						if(e.addPerson(people.get(i))){
+							peopleToRemove.add(people.get(i));
+						}else{
+							break;	//Not enough room
+						}
+					}
+					
+				}else{
+					
+					if(people.get(i).getDestination() != this.story){
+						if(e.addPerson(people.get(i))){
+							peopleToRemove.add(people.get(i));
+						}else{
+							break;	//Not enough room
+						}
+					}
+					
+				}
+				
+			}
+			people.removeAll(peopleToRemove);
+		}
+	}
+
+	
+
 	/**
 	 * Sets the story of the floor
 	 * @param storyIn - the story to set
@@ -54,4 +130,13 @@ public class SimpleFloorImpl implements Floor{
 	public int getStory(){
 		return story;
 	}
+
+	@Override
+	public void pressControlBox(int direction) throws InvalidArgumentException{
+		if(direction == ElevatorController.UP)
+			controlBox.pressUp();
+		else
+			controlBox.pressDown();
+	}
+
 }
