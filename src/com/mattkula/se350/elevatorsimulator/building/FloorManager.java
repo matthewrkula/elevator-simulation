@@ -57,6 +57,13 @@ public class FloorManager {
 	}
 	
 	/**
+	 * Used for testing building creation.
+	 */
+	public static void destroy(){
+		floorManager = null;
+	}
+	
+	/**
 	 * Static method that returns a reference to the only FloorManager instance.
 	 * @return The Singleton instance of FloorManager
 	 * @throws IllegalStateException if initialize is not called once before invoking getInstance()

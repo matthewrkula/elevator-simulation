@@ -1,7 +1,5 @@
 package com.mattkula.se350.elevatorsimulator.building;
 
-import java.util.Calendar;
-
 import com.mattkula.se350.elevatorsimulator.elevatorcontroller.ElevatorController;
 import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
 import com.mattkula.se350.elevatorsimulator.person.PersonGenerator;
@@ -49,12 +47,13 @@ public class Building {
 	/**
 	 * Creates a Building instance which creates/holds all of the elevators, initializes 
 	 * the FloorManager, and then begins the simulation by starting a thread for each elevator.
+	 * @param inputFile - The input file to get the data from.
 	 * @throws InvalidArgumentException when floors < 2 or number of elevators < 1
 	 */
-	public Building() throws IllegalStateException, InvalidArgumentException{
+	public Building(String inputFile) throws IllegalStateException, InvalidArgumentException{
 		isRunning = true;
 		currentTime = 0;
-		buildingStats = DataInputUtility.getBuildingInfoFromFile();
+		buildingStats = DataInputUtility.getBuildingInfoFromFile(inputFile);
 		
 		if(buildingStats == null){
 			throw new IllegalStateException("simulation_data.txt not found");
@@ -70,6 +69,29 @@ public class Building {
 	}
 	
 	/**
+	 * Constructor used ONLY for debugging purposes. DOES NOt begin the simulation, rather
+	 * waits for input from test cases.
+	 */
+	public Building(String inputFile, boolean isTesting) throws IllegalStateException, InvalidArgumentException{
+		isRunning = true;
+		currentTime = 0;
+		buildingStats = DataInputUtility.getBuildingInfoFromFile(inputFile);;
+		
+		if(buildingStats == null){
+			throw new IllegalStateException("simulation_data.txt not found");
+		}
+		
+		durationInMinutes = buildingStats.getSimulationTime();
+		timeScale = buildingStats.getTimeScaleFactor();
+		
+		FloorManager.initialize(buildingStats.getNumOfFloors());
+		PersonGenerator.initialize(buildingStats);
+		ElevatorController.initialize(buildingStats);	//Starts the elevator threads
+		if(!isTesting)
+			simulate();
+	}
+	
+	/**
 	 * The main loop for the main thread that keeps the simulation running for (durationInMinutes*60) seconds.
 	 * Also makes a call to possibly generate a person every second.
 	 * @throws InvalidArgumentException if data in the input file is invalid, as specified by the message
@@ -81,25 +103,26 @@ public class Building {
 				currentTime++;
 				Thread.sleep(1000 / Building.getTimeScale());
 				PersonGenerator.getInstance().generateAndAddPerson();
+				ElevatorController.getInstance().checkIfPendingNowValid();
 			}
 			
 			isRunning = false;
-			System.out.println("ALL DONE.");
 			System.exit(0);
 		
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	/**
-	 * Keeps track of the Global time, useful for logging.
-	 * @return A String formatting of the current hour, minute, second in hh:mm:ss format
+	 * Keeps track of simulation time, useful for logging.
+	 * @return A String formatting of the current hour, minute and second in hh:mm:ss format
 	 */
 	public static String getTimeString(){
-		Calendar c = Calendar.getInstance();
-		return String.format("%02d:%02d:%02d ", c.get(Calendar.HOUR), c.get(Calendar.MINUTE), c.get(Calendar.SECOND));
+//		Calendar c = Calendar.getInstance();
+//		return String.format("%02d:%02d:%02d ", c.get(Calendar.HOUR), c.get(Calendar.MINUTE), c.get(Calendar.SECOND));
+		
+		return String.format("%02d:%02d:%02d", currentTime / 3600, (currentTime / 60) % 60, currentTime%60);
 	}
 	
 	/**

@@ -128,7 +128,6 @@ public class SimpleFloorImpl implements Floor{
 
 	/**
 	 * Gets the story of the floor.
-	 * @param storyIn - the story to set.
 	 */
 	public int getStory(){
 		return story;

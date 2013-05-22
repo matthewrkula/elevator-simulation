@@ -3,9 +3,20 @@ package com.mattkula.se350.elevatorsimulator.elevatorcontroller;
 import com.mattkula.se350.elevatorsimulator.elevator.Elevator;
 import com.mattkula.se350.elevatorsimulator.elevator.ElevatorDTO;
 
+/**
+ * Delegate class that is given the task of choosing the best option of Elevator
+ * for a given request. Used by the ElevatorController, implements ElevatorDecisionDelegate.
+ * 
+ * @author Matt
+ *
+ */
 public class SimpleElevatorDecisionDelegate implements ElevatorDecisionDelegate{
 	
-	
+	/**
+	 * Chooses the best elevator to send a destination to based on the direction of the request,
+	 * the story that needs to be stopped at, and the current position/direction of all of the 
+	 * elevators. 
+	 */
 	public int getBestElevator(int direction, int story, ElevatorDTO[] data) {
 		
 		

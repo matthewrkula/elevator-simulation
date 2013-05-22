@@ -34,6 +34,12 @@ public interface Floor {
 	 */
 	public int getStory();
 	
+	/**
+	 * Method that simulates a Person pressing a ControlBox on whatever Floor they are on in 
+	 * their desired direction.
+	 * @param direction - The direction the Person wants to go 
+	 * @throws InvalidArgumentException if input data is invalid - specified by error message
+	 */
 	public void pressControlBox(int direction) throws InvalidArgumentException;
 
 }

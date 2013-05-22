@@ -20,8 +20,19 @@ import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
  */
 public class ElevatorController {
 	
+	/**
+	 * Elevator State - is not moving
+	 */
 	public static final int NONE = 0;
+	
+	/**
+	 * Elevator State - moving up
+	 */
 	public static final int UP = 1;
+	
+	/**
+	 * Elevator State - moving down
+	 */
 	public static final int DOWN = 2;
 	
 	/**
@@ -65,13 +76,21 @@ public class ElevatorController {
 		elevators = new ArrayList<Elevator>();
 		pendingUpRequests = new ArrayList<Integer>();
 		pendingDownRequests = new ArrayList<Integer>();
-		decisionDelegate = ElevatorDecisionDelegateFactory.build(1);
+//		decisionDelegate = ElevatorDecisionDelegateFactory.build(1);				//Default option
+		decisionDelegate = ElevatorDecisionDelegateFactory.build(2);               //Improved option
 		
 		for(int i=1; i <= buildingStats.getNumOfElevators(); i++){
 			elevators.add(ElevatorFactory.build(i, buildingStats.getDefaultFloor(), buildingStats.getMsPerFloor(), buildingStats.getMsDoorOperation()));
 		}
 		
 		startElevators();
+	}
+	
+	/**
+	 * Used for testing building creation.
+	 */
+	public static void destroy(){
+		controller = null;
 	}
 	
 	/**
@@ -101,23 +120,27 @@ public class ElevatorController {
 	 * @param direction - Up or down, depending on what the Person needs
 	 * @param story - The story that needs to be added to requests. 
 	 */
-	public void sendRequest(int direction, int story) throws InvalidArgumentException{
+	public int sendRequest(int direction, int story) throws InvalidArgumentException{
 		int bestElevator = decisionDelegate.getBestElevator(direction, story, getElevatorData());
 		
 		if(bestElevator != 0){
 			sendRequestToElevator(bestElevator, story);
+			return 1;
 		}else{
 			
 			switch(direction){
 			case ElevatorController.UP:
-				pendingUpRequests.add(story);
+				if(!pendingUpRequests.contains(story))
+					pendingUpRequests.add(story);
 				break;
 			case ElevatorController.DOWN:
-				pendingDownRequests.add(story);
+				if(!pendingDownRequests.contains(story))
+					pendingDownRequests.add(story);
 				break;
 			}
 			
 		}
+		return 0;
 	}
 	
 	/**
@@ -143,6 +166,40 @@ public class ElevatorController {
 		}
 	}
 	
+	/**
+	 * Checks the pending requests every second to see if they are
+	 * now able to be executed. 
+	 * 
+	 * @throws InvalidArgumentException if the requests to the elevator are not valid floors.
+	 */
+	public void checkIfPendingNowValid() throws InvalidArgumentException{
+		ArrayList<Integer> toRemove = new ArrayList<Integer>();
+		
+		for(int i = 0; i < pendingUpRequests.size(); i++){
+			if(sendRequest(ElevatorController.UP, pendingUpRequests.get(i)) == 1){
+				toRemove.add(pendingUpRequests.get(i));
+			}
+		}
+		
+		pendingUpRequests.removeAll(toRemove);
+		
+		toRemove = new ArrayList<Integer>();
+		
+		for(int i = 0; i < pendingDownRequests.size(); i++){
+			if(sendRequest(ElevatorController.DOWN, pendingDownRequests.get(i)) == 1){
+				toRemove.add(pendingDownRequests.get(i));
+			}
+		}
+		
+		pendingDownRequests.removeAll(toRemove);
+	}
+	
+	/**
+	 * Private method that gets generates an array of ElevatorDTO's that contain
+	 * the information neccessary for the delegates to choose which elevator is 
+	 * the best option for a request
+	 * @return An array of information about each Elevator instance
+	 */
 	public ElevatorDTO[] getElevatorData(){
 		ElevatorDTO[] data = new ElevatorDTO[elevators.size()];
 		
@@ -150,11 +207,10 @@ public class ElevatorController {
 			ElevatorDTO dto = new ElevatorDTO();
 			dto.currentFloor = elevators.get(i).getCurrentFloor();
 			dto.status = elevators.get(i).getStatus();
+			dto.remainingDestinations = elevators.get(i).getRemainingDestinations();
 			data[i] = dto;
 		}
 		
 		return data;
 	}
-	
-
 }

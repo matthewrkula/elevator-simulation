@@ -5,23 +5,17 @@ import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
 
 /**
  * ElevatorSimulation contains a main method that is the driver
- * for the current simulation. It is planned that this will be
- * deprecated when an ElevatorController is implemented and 
- * random People are being generated.
+ * for the current simulation. It starts the simulation then does
+ * nothing else.
  * 
  * @author Matt
  *
  */
 public class ElevatorSimulation {
 
-	@SuppressWarnings("unused")
-	public static void main(String[] args){
-		try{
-			Building building = new Building();
+	public static void main(String[] args) throws InvalidArgumentException{
+		
+			Building building = new Building("simulation_data.txt");
 			
-		}catch(InvalidArgumentException e){
-			System.out.println(e.getMessage());
-		}
 	}
-
 }

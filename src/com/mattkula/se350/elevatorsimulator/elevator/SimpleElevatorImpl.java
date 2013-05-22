@@ -316,7 +316,7 @@ public class SimpleElevatorImpl implements Elevator{
 	public void run() {
 		try{
 			
-		while(Building.isRunning()){
+		while(true){
 				if(destinationList.size() == 0){	// If there are no more pending requests
 					
 					if(getCurrentFloor() != getDefaultFloor()){ // If the elevator is not on it's default floor
