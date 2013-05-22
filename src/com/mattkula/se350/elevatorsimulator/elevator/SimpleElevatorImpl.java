@@ -42,7 +42,7 @@ public class SimpleElevatorImpl implements Elevator{
 	 * to its default floor.
 	 * Value: {@value}
 	 */
-	public static final int msBeforeTimeout = 3000;
+	public static final int msBeforeTimeout = 10000;
 	
 	/**
 	 * The elevator's identification number in the building, used to reference each individual one.
@@ -99,6 +99,14 @@ public class SimpleElevatorImpl implements Elevator{
 	 */
 	private FloorManager floorManager;
 	
+	/**
+	 * Constructor that creates a new SimpleElevatorImplementation
+	 * @param elevatorNum - The id/number of the elevator
+	 * @param defaultFloor - The default floor of the elevator
+	 * @param msPerFloor - The time it takes to travel one floor
+	 * @param msDoorOperation - The time it takes for the elevator to exchange people at a floor
+	 * @throws InvalidArgumentException if elevatorNum < 1 or defaultFloor is not a floor number
+	 */
 	public SimpleElevatorImpl(int elevatorNum, int defaultFloor, int msPerFloor, int msDoorOperation) throws InvalidArgumentException{
 		floorManager = FloorManager.getInstance();
 		

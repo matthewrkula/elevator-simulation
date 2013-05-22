@@ -6,6 +6,7 @@ import com.mattkula.se350.elevatorsimulator.building.Building;
 import com.mattkula.se350.elevatorsimulator.building.BuildingStatsDTO;
 import com.mattkula.se350.elevatorsimulator.building.FloorManager;
 import com.mattkula.se350.elevatorsimulator.elevator.Elevator;
+import com.mattkula.se350.elevatorsimulator.elevator.ElevatorDTO;
 import com.mattkula.se350.elevatorsimulator.elevator.ElevatorFactory;
 import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
 
@@ -19,6 +20,7 @@ import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
  */
 public class ElevatorController {
 	
+	public static final int NONE = 0;
 	public static final int UP = 1;
 	public static final int DOWN = 2;
 	
@@ -100,7 +102,7 @@ public class ElevatorController {
 	 * @param story - The story that needs to be added to requests. 
 	 */
 	public void sendRequest(int direction, int story) throws InvalidArgumentException{
-		int bestElevator = decisionDelegate.getBestElevator();
+		int bestElevator = decisionDelegate.getBestElevator(direction, story, getElevatorData());
 		
 		if(bestElevator != 0){
 			sendRequestToElevator(bestElevator, story);
@@ -126,7 +128,7 @@ public class ElevatorController {
 	 * @throws InvalidArgumentException if the elevatorId is greater than the number of elevators or less than 1
 	 * @throws InvalidArgumentException if the story is greater or less than the number of floors
 	 */
-	public static void sendRequestToElevator(int elevatorId, int story) throws InvalidArgumentException{
+	public void sendRequestToElevator(int elevatorId, int story) throws InvalidArgumentException{
 		if(elevatorId < 1 || elevatorId > elevators.size())
 			throw new InvalidArgumentException("Must call send request to valid elevator, elevatorId" + elevatorId + " outside of range");
 		
@@ -140,5 +142,19 @@ public class ElevatorController {
 			e.addDestination(story);
 		}
 	}
+	
+	public ElevatorDTO[] getElevatorData(){
+		ElevatorDTO[] data = new ElevatorDTO[elevators.size()];
+		
+		for(int i = 0; i < elevators.size(); i++){
+			ElevatorDTO dto = new ElevatorDTO();
+			dto.currentFloor = elevators.get(i).getCurrentFloor();
+			dto.status = elevators.get(i).getStatus();
+			data[i] = dto;
+		}
+		
+		return data;
+	}
+	
 
 }

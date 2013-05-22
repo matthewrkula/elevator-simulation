@@ -14,16 +14,19 @@ public class SimplePersonImpl implements Person{
 	
 	/**
 	 * The unique id for each Person to differentiate them.
+	 * @see #getId()
 	 */
 	private int id;
 	
 	/**
 	 * The desired floor that this instance is trying to get to.
+	 * @see #getDestination()
 	 */
 	private int destination;
 	
 	/**
 	 * The current state of the Person as defined by the enum in the Person interface. 
+	 * @see #getStatus()
 	 */
 	private Person.Status status;
 	

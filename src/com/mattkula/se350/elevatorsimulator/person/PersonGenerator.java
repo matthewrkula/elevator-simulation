@@ -90,7 +90,7 @@ public class PersonGenerator {
 			Person p = PersonFactory.build(currentId, dest);
 			FloorManager.getInstance().addPersonToFloor(source, p);
 			
-			System.out.println(String.format("Person added at %d pressed %s to go to %d", source, (dest > source ? "UP" : "DOWN"), dest));
+			System.out.println(String.format("Person %d added at %d pressed %s to go to %d", currentId, source, (dest > source ? "UP" : "DOWN"), dest));
 			
 			FloorManager.getInstance().pressControlBoxAt(source, (dest > source ? ElevatorController.UP : ElevatorController.DOWN));
 			

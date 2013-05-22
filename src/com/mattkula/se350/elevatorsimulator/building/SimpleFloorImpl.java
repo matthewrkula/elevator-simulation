@@ -27,6 +27,9 @@ public class SimpleFloorImpl implements Floor{
 	 */
 	ArrayList<Person> people;
 	
+	/**
+	 * Control box on the floor that people press when
+	 */
 	ControlBox controlBox;
 	
 	/**
@@ -131,6 +134,11 @@ public class SimpleFloorImpl implements Floor{
 		return story;
 	}
 
+	/**
+	 * Called when a Person is generated and needs to get to a new floor.
+	 * This floor gets added to the ElevatorController's pending requests.
+	 * @param direction - The direction that the new Person needs to go
+	 */
 	@Override
 	public void pressControlBox(int direction) throws InvalidArgumentException{
 		if(direction == ElevatorController.UP)
