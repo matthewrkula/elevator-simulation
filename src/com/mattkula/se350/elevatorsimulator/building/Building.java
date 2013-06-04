@@ -3,6 +3,7 @@ package com.mattkula.se350.elevatorsimulator.building;
 import com.mattkula.se350.elevatorsimulator.elevatorcontroller.ElevatorController;
 import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
 import com.mattkula.se350.elevatorsimulator.person.PersonGenerator;
+import com.mattkula.se350.elevatorsimulator.statistics.ReportGenerator;
 import com.mattkula.se350.elevatorsimulator.utilities.DataInputUtility;
 
 /**
@@ -65,6 +66,7 @@ public class Building {
 		FloorManager.initialize(buildingStats.getNumOfFloors());
 		PersonGenerator.initialize(buildingStats);
 		ElevatorController.initialize(buildingStats);	//Starts the elevator threads
+		ReportGenerator.initialize(buildingStats.getNumOfFloors());
 		simulate();
 	}
 	
@@ -87,6 +89,7 @@ public class Building {
 		FloorManager.initialize(buildingStats.getNumOfFloors());
 		PersonGenerator.initialize(buildingStats);
 		ElevatorController.initialize(buildingStats);	//Starts the elevator threads
+		ReportGenerator.initialize(buildingStats.getNumOfFloors());
 		if(!isTesting)
 			simulate();
 	}
@@ -107,6 +110,13 @@ public class Building {
 			}
 			
 			isRunning = false;
+			
+			Thread.sleep(2000); 	// Wait for other threads to finish
+			
+			System.out.println("Ending simulation. Generating report...");
+			
+			ReportGenerator.getInstance().printFinalReport();
+			
 			System.exit(0);
 		
 		} catch (InterruptedException e) {
@@ -119,10 +129,9 @@ public class Building {
 	 * @return A String formatting of the current hour, minute and second in hh:mm:ss format
 	 */
 	public static String getTimeString(){
-//		Calendar c = Calendar.getInstance();
-//		return String.format("%02d:%02d:%02d ", c.get(Calendar.HOUR), c.get(Calendar.MINUTE), c.get(Calendar.SECOND));
 		
-		return String.format("%02d:%02d:%02d", currentTime / 3600, (currentTime / 60) % 60, currentTime%60);
+		return String.format("%02d:%02d:%02d", currentTime / 3600, (currentTime / 60) % 60, currentTime % 60);
+		
 	}
 	
 	/**

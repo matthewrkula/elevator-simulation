@@ -53,7 +53,7 @@ public class BuildingStatsDTO {
 	/**
 	 * The default floor elevators go to after timing out.
 	 */
-	private int defaultFloor;
+	private int[] defaultFloor;
 	
 	/**
 	 * The number of generated people per simulation minute.
@@ -80,7 +80,7 @@ public class BuildingStatsDTO {
 	 * @param floorStatsPercentagesIn - Statics of the floors of the building
 	 */
 	public BuildingStatsDTO(int simulationTimeIn, int timeScaleFactorIn, int numOfFloorsIn, int numOfElevatorsIn, int maxPersonsPerElevatorIn, int msPerFloorIn,
-							int msDoorOperationIn, int defaultFloorIn, int personsPerMinuteIn, int[] floorStatsPercentagesIn) throws InvalidArgumentException{
+							int msDoorOperationIn, int defaultFloorIn[], int personsPerMinuteIn, int[] floorStatsPercentagesIn) throws InvalidArgumentException{
 		
 		setSimulationTime(simulationTimeIn);
 		setTimeScaleFactor(timeScaleFactorIn);
@@ -103,7 +103,7 @@ public class BuildingStatsDTO {
 
 	/**
 	 * Sets the simulation time, used in initialization.
-	 * @param simulatedTime -  The simulation time in minutes.
+	 * @param simulationTime -  The simulation time in minutes.
 	 */
 	private void setSimulationTime(int simulationTime) throws InvalidArgumentException{
 		if(simulationTime <= 0)
@@ -121,7 +121,7 @@ public class BuildingStatsDTO {
 
 	/**
 	 * Sets the time scale factor, used in initialization.
-	 * @params timeScaleFactor -  The number of simulation seconds for every regular second.
+	 * @param timeScaleFactor -  The number of simulation seconds for every regular second.
 	 */
 	private void setTimeScaleFactor(int timeScaleFactor) throws InvalidArgumentException{
 		if(timeScaleFactor <= 0)
@@ -222,18 +222,24 @@ public class BuildingStatsDTO {
 
 	/**
 	 * @return The default floor of the elevators.
+	 * @param elevator - The number of the elevator to get the default floor for
 	 */
-	public int getDefaultFloor() {
-		return defaultFloor;
+	public int getDefaultFloor(int elevator) {
+		return defaultFloor[elevator - 1];
 	}
 
 	/**
 	 * Sets the default floor of the elevators, used in initialization.
 	 * @param defaultFloor - The floor Elevators should default to
 	 */
-	private void setDefaultFloor(int defaultFloor) throws InvalidArgumentException{
-		if(defaultFloor <= 0 || defaultFloor > numOfFloors)
-			throw new InvalidArgumentException("Default floor must be a valid floor number");
+	private void setDefaultFloor(int defaultFloor[]) throws InvalidArgumentException{
+		if(defaultFloor.length != getNumOfElevators())
+			throw new InvalidArgumentException("Not the right number of default floors in input file.");
+		
+		for(int i = 0; i < defaultFloor.length; i++){
+			if(defaultFloor[i] <= 0 || defaultFloor[i] > getNumOfFloors())
+				throw new InvalidArgumentException("Default floor for Elevator" + i+1 + " in input file is not a valid floor");
+		}
 		
 		this.defaultFloor = defaultFloor;
 	}
@@ -285,7 +291,10 @@ public class BuildingStatsDTO {
 		s += "Max Persons Per Elevator: " + getMaxPersonsPerElevator() + "\n";
 		s += "ms Per Floor: " + getMsPerFloor() + "\n";
 		s += "ms Door Operation: " + getMsDoorOperation() + "\n";
-		s += "Default Floor: " + getDefaultFloor() + "\n";
+		
+		for(int i = 1; i <= getNumOfElevators(); i++){
+			s += "Default Floor: " + getDefaultFloor(i) + "\n";
+		}
 		s += "Persons Per Minute: " + getPersonsPerMinute() + "\n";
 		
 		for(int i = 1; i <= getNumOfFloors(); i++){

@@ -216,6 +216,7 @@ public class SimpleElevatorImpl implements Elevator{
 	 * @see #letPeopleOut(int)
 	 * @see #letPeopleIn(int)
 	 * @see #closeDoors()
+	 * @param floorNum
 	 * @throws InvalidArgumentException 
 	 */
 	private void arriveAtDestination() throws InvalidArgumentException{
@@ -274,12 +275,6 @@ public class SimpleElevatorImpl implements Elevator{
 				
 			}
 			
-			for(int i = 0; i < peopleToRemove.size(); i++){
-				Person p = peopleToRemove.get(i);
-				p.setFinishedTime();
-				System.out.println(String.format("Person %d waited for %d seconds and rode for %d seconds", p.getId(), p.getWaitTime(), p.getRideTime()));
-			}
-			
 			peopleInElevator.removeAll(peopleToRemove);
 			
 		}catch(InvalidArgumentException e){
@@ -321,7 +316,7 @@ public class SimpleElevatorImpl implements Elevator{
 	public void run() {
 		try{
 			
-		while(Building.isRunning()){
+		while(true){
 				if(destinationList.size() == 0){	// If there are no more pending requests
 					
 					if(getCurrentFloor() != getDefaultFloor()){ // If the elevator is not on it's default floor
@@ -450,7 +445,7 @@ public class SimpleElevatorImpl implements Elevator{
 	
 	/**
 	 * Set the number of the elevator instance.
-	 * @param num - The status of the elevator
+	 * @param newStatus - The status of the elevator
 	 */
 	private void setElevatorNum(int num){
 		elevatorNumber = num;

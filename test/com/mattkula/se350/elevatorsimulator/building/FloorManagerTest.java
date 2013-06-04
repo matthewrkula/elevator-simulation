@@ -40,7 +40,7 @@ public class FloorManagerTest {
 		}catch(IllegalStateException e){
 			//pass
 		}
-		FloorManager.getInstance().addPersonToFloor(16, PersonGenerator.build(1, 1));
+		FloorManager.getInstance().addPersonToFloor(16, PersonGenerator.build(1, 2, 1));
 	}
 	
 

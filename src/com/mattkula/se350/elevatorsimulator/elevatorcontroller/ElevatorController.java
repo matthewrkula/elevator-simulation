@@ -80,7 +80,7 @@ public class ElevatorController {
 		decisionDelegate = ElevatorDecisionDelegateFactory.build(2);               //Improved option
 		
 		for(int i=1; i <= buildingStats.getNumOfElevators(); i++){
-			elevators.add(ElevatorFactory.build(i, buildingStats.getDefaultFloor(), buildingStats.getMsPerFloor(), buildingStats.getMsDoorOperation()));
+			elevators.add(ElevatorFactory.build(i, buildingStats.getDefaultFloor(i), buildingStats.getMsPerFloor(), buildingStats.getMsDoorOperation()));
 		}
 		
 		startElevators();

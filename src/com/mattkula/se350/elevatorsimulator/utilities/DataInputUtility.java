@@ -34,27 +34,33 @@ public class DataInputUtility {
 			}
 			
 			String[] args = dataString.split(",");
+			int counter = 0;
 			
-			int duration = Integer.parseInt(args[0].trim());
-			int scale = Integer.parseInt(args[1].trim());
-			int floors = Integer.parseInt(args[2].trim());
-			int elevators = Integer.parseInt(args[3].trim());
-			int maxPersons = Integer.parseInt(args[4].trim());
-			int msPerFloor = Integer.parseInt(args[5].trim());
-			int msDoorOperation = Integer.parseInt(args[6].trim());
-			int defaultElevatorFloor = Integer.parseInt(args[7].trim());
-			int personsPerMinute = Integer.parseInt(args[8].trim());
+			int duration = Integer.parseInt(args[counter++].trim());
+			int scale = Integer.parseInt(args[counter++].trim());
+			int floors = Integer.parseInt(args[counter++].trim());
+			int elevators = Integer.parseInt(args[counter++].trim());
+			int maxPersons = Integer.parseInt(args[counter++].trim());
+			int msPerFloor = Integer.parseInt(args[counter++].trim());
+			int msDoorOperation = Integer.parseInt(args[counter++].trim());
+			
+			int[] defaultFloors = new int[elevators];
+			for(int i = 0; i < elevators; i++){
+				defaultFloors[i] = Integer.parseInt(args[counter++].trim());
+			}
+			
+			int personsPerMinute = Integer.parseInt(args[counter++].trim());
 			
 			int[] startDestPct = new int[floors];
 			
-			for(int i = 9; i < args.length; i++){
-				startDestPct[i-9] = Integer.parseInt(args[i].trim());
+			for(int i = 0; i < floors; i++){
+				startDestPct[i] = Integer.parseInt(args[counter++].trim());
 			}
 			
 			returnObject = new BuildingStatsDTO(duration, scale, floors, elevators, maxPersons, msPerFloor,
-												msDoorOperation, defaultElevatorFloor, personsPerMinute, startDestPct);
+												msDoorOperation, defaultFloors, personsPerMinute, startDestPct);
 			
-			
+			System.out.println(returnObject.toString());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

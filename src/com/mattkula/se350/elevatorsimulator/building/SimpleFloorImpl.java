@@ -36,7 +36,7 @@ public class SimpleFloorImpl implements Floor{
 	 * Constructor for a Simple Floor. 
 	 * @param story - The story that this floor will simulate
 	 */
-	public SimpleFloorImpl(int story){
+	public SimpleFloorImpl(int story) throws InvalidArgumentException{
 		setStory(story);
 		people = new ArrayList<Person>();
 		controlBox = new ControlBox(getStory());
@@ -112,6 +112,11 @@ public class SimpleFloorImpl implements Floor{
 				}
 				
 			}
+			
+			for(int i = 0; i < peopleToRemove.size(); i++){
+				peopleToRemove.get(i).setAddedToElevatorTime();
+			}
+			
 			people.removeAll(peopleToRemove);
 		}
 	}

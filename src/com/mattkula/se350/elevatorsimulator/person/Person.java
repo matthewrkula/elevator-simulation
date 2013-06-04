@@ -17,6 +17,12 @@ public interface Person {
 	}
 	
 	/**
+	 * Get the Original floor of this person
+	 * @return The floor this person was generated on.
+	 */
+	public int getSource();
+	
+	/**
 	 * Gets the desired destination story for this person.
 	 * @return The desired destination story for this person.
 	 */
@@ -35,5 +41,26 @@ public interface Person {
 	 * @return The unique id for the Person instance
 	 */
 	public int getId();
+	
+	/**
+	 * Called when the Person is added to the Elevator to measure their wait time.
+	 */
+	public void setAddedToElevatorTime();
+	
+	/**
+	 * Called when the Person arrives at the destination to measure how long their ride was. 
+	 */
+	public void setFinishedTime();
 
+	/**
+	 * Gets the number of seconds that a person waited for an elevator
+	 * @return The number of seconds that a person waited for an elevator
+	 */
+	public int getWaitTime();
+	
+	/**
+	 * Gets the number of seconds that a person rode on an elevator
+	 * @return The number of seconds that a person rode on an elevator
+	 */
+	public int getRideTime();
 }

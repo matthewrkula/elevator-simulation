@@ -37,8 +37,14 @@ public class FloorManager {
 	private FloorManager(int numOfFloors){
 		floors = new ArrayList<Floor>();
 		
-		for(int i=1; i <= numOfFloors; i++){
-			floors.add(FloorFactory.build(i));
+		try{
+		
+			for(int i=1; i <= numOfFloors; i++){
+				floors.add(FloorFactory.build(i));
+			}
+		
+		}catch(InvalidArgumentException e){
+			e.printStackTrace();
 		}
 	}
 	
@@ -89,10 +95,22 @@ public class FloorManager {
 		}
 	}
 	
+	/**
+	 * Adds people from the specified floor to the specified elevator.
+	 * @param story - The story that the elevator arrived at
+	 * @param e - The elevator to add people to
+	 * @throws InvalidArgumentException - if the story is not a valid story
+	 */
 	public void addPeopleToElevator(int story, Elevator e) throws InvalidArgumentException{
 		floors.get(story - 1).addPeopleToElevator(e);
 	}
 	
+	/**
+	 * Called when a Control Box is pressed
+	 * @param story - The story the Control Box is pressed
+	 * @param direction - The direction the person wants to go 
+	 * @throws InvalidArgumentException - if the story is not a valid story
+	 */
 	public void pressControlBoxAt(int story, int direction) throws InvalidArgumentException{
 		floors.get(story - 1).pressControlBox(direction);
 	}

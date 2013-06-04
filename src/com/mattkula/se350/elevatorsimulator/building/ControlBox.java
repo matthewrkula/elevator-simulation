@@ -21,9 +21,9 @@ public class ControlBox {
 	
 	/**
 	 * Simple Constructor that sets the story of this ControlBox
-	 * @param storyIn
+	 * @param story - The story of the Control Box
 	 */
-	public ControlBox(int story){
+	public ControlBox(int story) throws InvalidArgumentException{
 		setStory(story);
 	}
 	
@@ -51,7 +51,10 @@ public class ControlBox {
 	 * Sets the story of the ControlBox, used in initialization
 	 * @param storyIn - The story to set the ControlBox's story to
 	 */
-	private void setStory(int storyIn){
+	private void setStory(int storyIn) throws InvalidArgumentException{
+		if(storyIn <= 0)
+			throw new InvalidArgumentException("Elevator Control Box set on an illegal floor number");
+		
 		story = storyIn;
 	}
 

@@ -100,7 +100,7 @@ public class PersonGenerator {
 			int source = getSourceFloor();
 			int dest = getDestFloor(source);
 			
-			Person p = PersonGenerator.build(currentId, dest);
+			Person p = PersonGenerator.build(currentId, source, dest);
 			FloorManager.getInstance().addPersonToFloor(source, p);
 			
 			System.out.println(String.format("%s Person %d added at %d pressed %s to go to %d", Building.getTimeString(), currentId, source, (dest > source ? "UP" : "DOWN"), dest));
@@ -174,12 +174,13 @@ public class PersonGenerator {
 	 * Creates Person implementations that best fit the parameters in
 	 * a Factory Pattern type of way.
 	 * @param id - Unique id of the Person instance to be generated
+	 * @param source - The starting floor of the new Person implementation
 	 * @param dest - The destination of the new Person implementation
 	 * @return Best fit implementation of an Person
 	 * @throws InvalidArgumentException if the destination is not a valid floor
 	 */
-	public static Person build(int id, int dest) throws InvalidArgumentException{
-		return new SimplePersonImpl(id, dest);
+	public static Person build(int id, int source, int dest) throws InvalidArgumentException{
+		return new SimplePersonImpl(id, source, dest);
 	}
 
 }
