@@ -20,51 +20,49 @@ public class DataInputUtility {
 	 * Gets all simulation that is neccessary for execution from a file.
 	 * @param inputFile - the File to get the data from
 	 * @return BuildingStatsDTO that contains all neccessary simulation data.
-	 * @throws InvlaidArgumentException - if the Data in the file is incorrect/illegal
+	 * @throws InvalidArgumentException if the Data in the file is incorrect/illegal
+	 * @throws FileNotFoundException if the filename is not a valid file. 
 	 */
-	public static BuildingStatsDTO getBuildingInfoFromFile(String inputFile) throws InvalidArgumentException{
+	public static BuildingStatsDTO getBuildingInfoFromFile(String inputFile) throws InvalidArgumentException, FileNotFoundException{
 		File data = new File(inputFile);
 		String dataString = "";
 		BuildingStatsDTO returnObject = null;
 		
-		try {
-			Scanner s = new Scanner(data);
-			
-			while(s.hasNextLine()){
-				dataString = s.nextLine();
-			}
-			
-			String[] args = dataString.split(",");
-			int counter = 0;
-			
-			int duration = Integer.parseInt(args[counter++].trim());
-			int scale = Integer.parseInt(args[counter++].trim());
-			int floors = Integer.parseInt(args[counter++].trim());
-			int elevators = Integer.parseInt(args[counter++].trim());
-			int maxPersons = Integer.parseInt(args[counter++].trim());
-			int msPerFloor = Integer.parseInt(args[counter++].trim());
-			int msDoorOperation = Integer.parseInt(args[counter++].trim());
-			
-			int[] defaultFloors = new int[elevators];
-			for(int i = 0; i < elevators; i++){
-				defaultFloors[i] = Integer.parseInt(args[counter++].trim());
-			}
-			
-			int personsPerMinute = Integer.parseInt(args[counter++].trim());
-			
-			int[] startDestPct = new int[floors];
-			
-			for(int i = 0; i < floors; i++){
-				startDestPct[i] = Integer.parseInt(args[counter++].trim());
-			}
-			
-			returnObject = new BuildingStatsDTO(duration, scale, floors, elevators, maxPersons, msPerFloor,
-												msDoorOperation, defaultFloors, personsPerMinute, startDestPct);
-			
-//			System.out.println(returnObject.toString());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		
+		Scanner s = new Scanner(data);
+		
+		while(s.hasNextLine()){
+			dataString = s.nextLine();
 		}
+		
+		String[] args = dataString.split(",");
+		int counter = 0;
+		
+		int duration = Integer.parseInt(args[counter++].trim());
+		int scale = Integer.parseInt(args[counter++].trim());
+		int floors = Integer.parseInt(args[counter++].trim());
+		int elevators = Integer.parseInt(args[counter++].trim());
+		int maxPersons = Integer.parseInt(args[counter++].trim());
+		int msPerFloor = Integer.parseInt(args[counter++].trim());
+		int msDoorOperation = Integer.parseInt(args[counter++].trim());
+		
+		int[] defaultFloors = new int[elevators];
+		for(int i = 0; i < elevators; i++){
+			defaultFloors[i] = Integer.parseInt(args[counter++].trim());
+		}
+		
+		int personsPerMinute = Integer.parseInt(args[counter++].trim());
+		
+		int[] startDestPct = new int[floors];
+		
+		for(int i = 0; i < floors; i++){
+			startDestPct[i] = Integer.parseInt(args[counter++].trim());
+		}
+		
+		returnObject = new BuildingStatsDTO(duration, scale, floors, elevators, maxPersons, msPerFloor,
+											msDoorOperation, defaultFloors, personsPerMinute, startDestPct);
+			
+		
 		
 		return returnObject;
 	}

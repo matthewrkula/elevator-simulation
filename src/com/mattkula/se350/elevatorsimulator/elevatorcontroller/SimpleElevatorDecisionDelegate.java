@@ -17,6 +17,7 @@ public class SimpleElevatorDecisionDelegate implements ElevatorDecisionDelegate{
 	 * Chooses the best elevator to send a destination to based on the direction of the request,
 	 * the story that needs to be stopped at, and the current position/direction of all of the 
 	 * elevators. 
+	 * @return The number of the best elevator to send to the story, 0 if no elevator is good for the resquest yet.
 	 */
 	public int getBestElevator(int direction, int story, ElevatorDTO[] data) {
 		
@@ -25,14 +26,12 @@ public class SimpleElevatorDecisionDelegate implements ElevatorDecisionDelegate{
 			ElevatorDTO elevator = data[i-1];
 			if((elevator.status == Elevator.Status.MOVING_UP && elevator.currentFloor < story && direction == ElevatorController.UP) ||
 					(elevator.status == Elevator.Status.MOVING_DOWN && elevator.currentFloor > story && direction == ElevatorController.DOWN)){
-//				System.out.println(String.format("Best fit for %d is %d", story, i));
 				System.out.println(String.format("%s Sending Elevator %d to Floor %d", Building.getTimeString(), i, story));
 				return i;
 			}
 			
 			if((elevator.status == Elevator.Status.WAITING || elevator.status == Elevator.Status.WAITING_DEFAULT)
-				&& elevator.currentFloor == story){
-//				System.out.println(String.format("Best fit for %d is %d", story, i));
+					&& elevator.currentFloor == story){
 				System.out.println(String.format("%s Sending Elevator %d to Floor %d", Building.getTimeString(), i, story));
 				return i;
 			}
@@ -41,7 +40,6 @@ public class SimpleElevatorDecisionDelegate implements ElevatorDecisionDelegate{
 		for(int i = 1; i <= data.length; i++){
 			ElevatorDTO elevator = data[i-1];
 			if(elevator.status == Elevator.Status.WAITING_DEFAULT){
-//				System.out.println(String.format("Best fit for %d is %d", story, i));
 				System.out.println(String.format("%s Sending Elevator %d to Floor %d", Building.getTimeString(), i, story));
 				return i;
 			}
@@ -50,7 +48,6 @@ public class SimpleElevatorDecisionDelegate implements ElevatorDecisionDelegate{
 		for(int i = 1; i <= data.length; i++){
 			ElevatorDTO elevator = data[i-1];
 			if(elevator.status == Elevator.Status.WAITING){
-//				System.out.println(String.format("Best fit for %d is %d", story, i));
 				System.out.println(String.format("%s Sending Elevator %d to Floor %d", Building.getTimeString(), i, story));
 				return i;
 			}

@@ -110,16 +110,13 @@ public class SimpleElevatorImpl implements Elevator{
 	public SimpleElevatorImpl(int elevatorNum, int defaultFloor, int msPerFloor, int msDoorOperation) throws InvalidArgumentException{
 		floorManager = FloorManager.getInstance();
 		
-		if(elevatorNum < 1)
-			throw new InvalidArgumentException("Elevator number cannot be less than one.");
-		
 		if(defaultFloor < 1 || defaultFloor > floorManager.getNumberOfFloors())
 			throw new InvalidArgumentException("Default floor out of range.");
 		
-		setElevatorNum(elevatorNum);
 		destinationList = new ArrayList<Integer>();
 		peopleInElevator = new ArrayList<Person>();
 		
+		setElevatorNum(elevatorNum);
 		setMaxCapacity(10);
 		setCurrentFloor(defaultFloor);
 		setDefaultFloor(defaultFloor);
@@ -398,11 +395,11 @@ public class SimpleElevatorImpl implements Elevator{
 		String s = "[";
 		int peopleLeft = peopleInElevator.size();
 		for(int i = 0; i < peopleLeft - 1; i++){
-			s += peopleInElevator.get(i).getId() + ", ";
+			s += "Person-" + peopleInElevator.get(i).getId() + ", ";
 		}
 		
 		if(peopleLeft > 0){
-			s += peopleInElevator.get(peopleLeft - 1).getId();
+			s += "Person-" + peopleInElevator.get(peopleLeft - 1).getId();
 		}
 		return s + "]";
 	}
@@ -456,7 +453,10 @@ public class SimpleElevatorImpl implements Elevator{
 	 * Set the number of the elevator instance.
 	 * @param num - The status of the elevator
 	 */
-	private void setElevatorNum(int num){
+	private void setElevatorNum(int num) throws InvalidArgumentException{
+		if(num < 0)
+			throw new InvalidArgumentException("Elevator number cannot be 0");
+		
 		elevatorNumber = num;
 	}
 	

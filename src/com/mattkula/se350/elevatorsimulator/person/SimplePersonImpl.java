@@ -113,8 +113,12 @@ public class SimplePersonImpl implements Person{
 	/**
 	 * Sets the id of the Person, used in initialization.
 	 * @param idIn - the id you want to give to the person
+	 * @throws InvalidArgumentException  if the new id is not a positive number.
 	 */
-	private void setId(int idIn){
+	private void setId(int idIn) throws InvalidArgumentException{
+		if(idIn <= 0)
+			throw new InvalidArgumentException("Person id must be positive");
+		
 		id = idIn;
 	}
 
@@ -148,6 +152,8 @@ public class SimplePersonImpl implements Person{
 	 */
 	public void setFinishedTime() {
 		this.finishedTime = Building.getCurrentTime();
+		
+		setStatus(Person.Status.REACHED_DESTINATION);
 		
 		PersonResultDTO result = new PersonResultDTO();
 		result.id = getId();

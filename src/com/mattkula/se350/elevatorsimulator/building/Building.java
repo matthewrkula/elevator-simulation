@@ -1,5 +1,7 @@
 package com.mattkula.se350.elevatorsimulator.building;
 
+import java.io.FileNotFoundException;
+
 import com.mattkula.se350.elevatorsimulator.elevatorcontroller.ElevatorController;
 import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
 import com.mattkula.se350.elevatorsimulator.person.PersonGenerator;
@@ -50,15 +52,12 @@ public class Building {
 	 * the FloorManager, and then begins the simulation by starting a thread for each elevator.
 	 * @param inputFile - The input file to get the data from.
 	 * @throws InvalidArgumentException when floors < 2 or number of elevators < 1
+	 * @throws FileNotFoundException if the specified file is not valid
 	 */
-	public Building(String inputFile, int decisionDelegate) throws IllegalStateException, InvalidArgumentException{
+	public Building(String inputFile, int decisionDelegate) throws IllegalStateException, InvalidArgumentException, FileNotFoundException{
 		isRunning = true;
 		currentTime = 0;
 		buildingStats = DataInputUtility.getBuildingInfoFromFile(inputFile);
-		
-		if(buildingStats == null){
-			throw new IllegalStateException("simulation_data.txt not found");
-		}
 		
 		durationInMinutes = buildingStats.getSimulationTime();
 		timeScale = buildingStats.getTimeScaleFactor();
@@ -74,7 +73,7 @@ public class Building {
 	 * Constructor used ONLY for debugging purposes. DOES NOt begin the simulation, rather
 	 * waits for input from test cases.
 	 */
-	public Building(String inputFile, int decisionDelegate, boolean isTesting) throws IllegalStateException, InvalidArgumentException{
+	public Building(String inputFile, int decisionDelegate, boolean isTesting) throws IllegalStateException, InvalidArgumentException, FileNotFoundException{
 		isRunning = true;
 		currentTime = 0;
 		buildingStats = DataInputUtility.getBuildingInfoFromFile(inputFile);;

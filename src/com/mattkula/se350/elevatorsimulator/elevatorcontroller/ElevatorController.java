@@ -167,7 +167,6 @@ public class ElevatorController {
 		if(story < 1 || story > FloorManager.getInstance().getNumberOfFloors())
 			throw new InvalidArgumentException("Elevator being sent out of floor range.");
 		
-//		System.out.printf("%s Sending Elevator %d to Floor %d.\n", Building.getTimeString(), elevatorId, story);
 		Elevator e = elevators.get(elevatorId - 1);
 		synchronized(e){
 			e.notify();
