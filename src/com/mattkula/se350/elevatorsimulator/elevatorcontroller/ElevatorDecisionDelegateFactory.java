@@ -18,9 +18,9 @@ public class ElevatorDecisionDelegateFactory {
 	public static ElevatorDecisionDelegate build(int which){
 		
 		switch(which){
-		case 1:
+		case ElevatorController.DEFAULT_DECISION_DELEGATE:
 			return new SimpleElevatorDecisionDelegate();
-		case 2:
+		case ElevatorController.IMPROVED_DECISION_DELEGATE:
 			return new ImprovedElevatorDecisionDelegate();
 		}
 		

@@ -187,8 +187,10 @@ public class SimpleElevatorImpl implements Elevator{
 			if(destinationList.get(0) > getCurrentFloor()){
 				setStatus(Elevator.Status.MOVING_UP);
 				
-				System.out.printf("%s Elevator %d passing %d on way up to Floor %d. Remaining Destinations: %s\n", 
-						Building.getTimeString(), elevatorNumber, currentFloor, destinationList.get(0), getRemainingDestinations());
+				System.out.printf("%s Elevator %d passing %d on way UP to Floor %d.\n", 
+						Building.getTimeString(), elevatorNumber, currentFloor, destinationList.get(0));
+				System.out.printf("          Elevator %d contains: %s \n", getElevatorNumber(), this.getPeopleInElevator());
+				System.out.printf("          Elevator %d destinations: %s \n", getElevatorNumber(), this.getRemainingDestinations());
 				currentFloor++;
 				
 				Thread.sleep(getMsPerFloor() / Building.getTimeScale());		// Simulate delay in moving up a floor
@@ -196,8 +198,10 @@ public class SimpleElevatorImpl implements Elevator{
 			}else if(destinationList.get(0) < getCurrentFloor()){
 				setStatus(Elevator.Status.MOVING_DOWN);
 				
-				System.out.printf("%s Elevator %d passing %d on way down to Floor %d. Remaining Destinations: %s\n", 
-						Building.getTimeString(), elevatorNumber, currentFloor, destinationList.get(0), getRemainingDestinations());
+				System.out.printf("%s Elevator %d passing %d on way DOWN to Floor %d.\n", 
+						Building.getTimeString(), elevatorNumber, currentFloor, destinationList.get(0));
+				System.out.printf("          Elevator %d contains: %s \n", getElevatorNumber(), this.getPeopleInElevator());
+				System.out.printf("          Elevator %d destinations: %s \n", getElevatorNumber(), this.getRemainingDestinations());
 				currentFloor--;
 				
 				Thread.sleep(getMsPerFloor() / Building.getTimeScale());		// Simulate delay in moving up a floor
@@ -222,6 +226,7 @@ public class SimpleElevatorImpl implements Elevator{
 		System.out.printf("%s Elevator %d arrived at Floor %d.\n", Building.getTimeString(), elevatorNumber, currentFloor);
 		destinationList.remove(0);
 		if(destinationList.size() == 0){
+			System.out.printf("%s Elevator %d is now WAITING. \n", Building.getTimeString(), elevatorNumber);
 			setStatus(Elevator.Status.WAITING);
 		}
 		doFloorExchange();
@@ -277,7 +282,6 @@ public class SimpleElevatorImpl implements Elevator{
 			for(int i = 0; i < peopleToRemove.size(); i++){
 				Person p = peopleToRemove.get(i);
 				p.setFinishedTime();
-				System.out.println(String.format("Person %d waited for %d seconds and rode for %d seconds", p.getId(), p.getWaitTime(), p.getRideTime()));
 			}
 			
 			peopleInElevator.removeAll(peopleToRemove);

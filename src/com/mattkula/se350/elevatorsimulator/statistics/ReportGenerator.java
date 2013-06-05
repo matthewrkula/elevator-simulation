@@ -3,7 +3,6 @@ package com.mattkula.se350.elevatorsimulator.statistics;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.mattkula.se350.elevatorsimulator.building.FloorManager;
 import com.mattkula.se350.elevatorsimulator.person.PersonResultDTO;
 
 /**
@@ -119,6 +118,7 @@ public class ReportGenerator {
 	public void printFinalReport(){
 		
 		//print the wait times
+		System.out.printf("%40s \n", "Average Wait Times by Floor");
 		System.out.println(String.format("%15s %15s %15s %15s", "Floor", "Avg Wait Time", "Min Wait Time", "Max Wait Time"));
 		
 		for(int i = 0; i < waitTimes.size(); i++){
@@ -133,10 +133,14 @@ public class ReportGenerator {
 		System.out.println();
 		
 		//Print ride times
-		
+		System.out.printf("%40s \n", "Average Ride Times from Floor to Floor");
 		for(int i = 0; i < waitTimes.size(); i++){
 			for(int j = 0; j < waitTimes.size(); j++){
-				System.out.printf("%8d ", getAverageTime(rideTimes.get(i).get(j)));
+				int averageTime = getAverageTime(rideTimes.get(i).get(j));
+				if(averageTime != -1)
+					System.out.printf("%8d ", averageTime);
+				else
+					System.out.printf("%8s ", "n/a");
 			}
 			System.out.println();
 		}
@@ -144,6 +148,8 @@ public class ReportGenerator {
 		System.out.println();
 		
 		//print out all reports
+		System.out.printf("%40s \n", "Wait and Ride Times by Person");
+		Collections.sort(reports);
 		System.out.println(String.format("%15s %15s %15s %15s %15s", "Person", "Wait Time", "Start Floor", "Dest Floor", "Ride Time"));
 		
 		for(int i = 0; i < reports.size(); i++){

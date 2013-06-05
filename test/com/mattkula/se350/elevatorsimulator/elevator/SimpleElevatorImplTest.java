@@ -19,7 +19,7 @@ public class SimpleElevatorImplTest {
 	public static void setup() throws Exception{
 		BuildingStatsDTO stats = new BuildingStatsDTO(1, 1, 15, 4, 12, 1000, 2200, new int[]{7, 1, 1, 1}, 0, new int[]{100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
 		
-		Building b = new Building("simulation_data_testing.txt", true);
+		Building b = new Building("simulation_data_testing.txt", ElevatorController.DEFAULT_DECISION_DELEGATE, true);
 		
 		ec = ElevatorController.getInstance();
 	}

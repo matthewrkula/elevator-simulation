@@ -1,6 +1,7 @@
 package com.mattkula.se350.elevatorsimulator;
 
 import com.mattkula.se350.elevatorsimulator.building.Building;
+import com.mattkula.se350.elevatorsimulator.elevatorcontroller.ElevatorController;
 import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
 
 /**
@@ -15,7 +16,11 @@ public class ElevatorSimulation {
 
 	public static void main(String[] args) throws InvalidArgumentException{
 		
-			Building building = new Building("simulation_data.txt");
+		
+			// change my to:
+			//		ElevatorController.IMPROVED_DECISION_DELEGATE 
+			// for my implementation
+			Building building = new Building("simulation_data.txt", ElevatorController.DEFAULT_DECISION_DELEGATE);
 			
 	}
 }

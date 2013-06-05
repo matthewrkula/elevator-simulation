@@ -35,6 +35,17 @@ public class PersonGenerator {
 	private static int personsPerMinute;
 	
 	/**
+	 * The number of seconds in between each generated person, determined by 60 / personsPerMinute 
+	 */
+	private static int secondsBetween;
+	
+	/**
+	 * Used to generate People every 'secondsBetween' seconds. When it reaches zero, it generates a 
+	 * new Person, then gets reset to secondsBetween.
+	 */
+	private static int timer;
+	
+	/**
 	 * Percentages that somebody will be generated at each floor or their destination will be that floor.
 	 * Each story refers to index-1
 	 */
@@ -72,6 +83,14 @@ public class PersonGenerator {
 		generator = new PersonGenerator();
 		personsPerMinute = buildingStats.getPersonsPerMinute();
 		floorStats = new int[buildingStats.getNumOfFloors()];
+		
+		if(personsPerMinute == 0)
+			secondsBetween = 0;
+		else
+			secondsBetween = 60 / personsPerMinute;
+		
+		timer = 0;
+		
 		r = new Random();
 		
 		int counterTo100 = 0;
@@ -86,15 +105,16 @@ public class PersonGenerator {
 	
 	/**
 	 * Method to create people and add them to floors. Called every second, 
-	 * but only creates people based on the number of  peoplePerMinute specified by
-	 * the text file input. 
+	 * but only creates people based on the number of peoplePerMinute specified by
+	 * the text file input. They are created every 'secondsBetween' seconds.
 	 * @return 0 if nothing was generated or the new person's destination if somebody was
 	 * @throws InvalidArgumentException if Person creation data is invalid
 	 */
 	public int generateAndAddPerson() throws InvalidArgumentException{
 		
-		if(r.nextInt(60) < personsPerMinute){
-				
+		if(timer == 0){
+			timer = secondsBetween;
+		
 			currentId++;
 			
 			int source = getSourceFloor();
@@ -109,6 +129,8 @@ public class PersonGenerator {
 			
 			
 			return source;
+		}else{
+			timer--;
 		}
 		
 		return 0;

@@ -8,7 +8,7 @@ package com.mattkula.se350.elevatorsimulator.person;
  * @author Matt
  *
  */
-public class PersonResultDTO {
+public class PersonResultDTO implements Comparable<PersonResultDTO>{
 	
 	/**
 	 * The id of the person whose stats are being reported. 
@@ -34,5 +34,17 @@ public class PersonResultDTO {
 	 * The floor the person ended on.
 	 */
 	public int endingFloor;
+
+	/**
+	 * Useful for sorting collections of PersonResultDTO. 
+	 */
+	@Override
+	public int compareTo(PersonResultDTO o) {
+		if(id < o.id)
+			return -1;
+		if(id > o.id)
+			return 1;
+		return 0;
+	}
 
 }

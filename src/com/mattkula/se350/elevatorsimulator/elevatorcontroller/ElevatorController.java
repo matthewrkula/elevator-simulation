@@ -2,7 +2,6 @@ package com.mattkula.se350.elevatorsimulator.elevatorcontroller;
 
 import java.util.ArrayList;
 
-import com.mattkula.se350.elevatorsimulator.building.Building;
 import com.mattkula.se350.elevatorsimulator.building.BuildingStatsDTO;
 import com.mattkula.se350.elevatorsimulator.building.FloorManager;
 import com.mattkula.se350.elevatorsimulator.elevator.Elevator;
@@ -19,6 +18,16 @@ import com.mattkula.se350.elevatorsimulator.exceptions.InvalidArgumentException;
  *
  */
 public class ElevatorController {
+	
+	/**
+	 * Constant for choosing the SimpleElevatorDecisionDelegate in the simulation
+	 */
+	public static final int DEFAULT_DECISION_DELEGATE = 1;
+	
+	/**
+	 * Constant for choosing the ImprovedElevatorDecisionDelegate in the simulation
+	 */
+	public static final int IMPROVED_DECISION_DELEGATE = 2;
 	
 	/**
 	 * Elevator State - is not moving
@@ -69,15 +78,15 @@ public class ElevatorController {
 	 * Initializes the Elevator controller to be used. MUST be called before
 	 * any calls to getInstance or any other public method.
 	 * @param buildingStats - The data block that holds neccessary information about the elevators
+	 * @param whichDecisionDelegate - The delegate to use for getting the best elevator. 
 	 * @throws InvalidArgumentException - If data passed into the new elevators is invalid
 	 */
-	public static synchronized void initialize(BuildingStatsDTO buildingStats) throws InvalidArgumentException{
+	public static synchronized void initialize(BuildingStatsDTO buildingStats, int whichDecisionDelegate) throws InvalidArgumentException{
 		controller = new ElevatorController();
 		elevators = new ArrayList<Elevator>();
 		pendingUpRequests = new ArrayList<Integer>();
 		pendingDownRequests = new ArrayList<Integer>();
-//		decisionDelegate = ElevatorDecisionDelegateFactory.build(1);				//Default option
-		decisionDelegate = ElevatorDecisionDelegateFactory.build(2);               //Improved option
+		decisionDelegate = ElevatorDecisionDelegateFactory.build(whichDecisionDelegate);
 		
 		for(int i=1; i <= buildingStats.getNumOfElevators(); i++){
 			elevators.add(ElevatorFactory.build(i, buildingStats.getDefaultFloor(i), buildingStats.getMsPerFloor(), buildingStats.getMsDoorOperation()));
@@ -158,7 +167,7 @@ public class ElevatorController {
 		if(story < 1 || story > FloorManager.getInstance().getNumberOfFloors())
 			throw new InvalidArgumentException("Elevator being sent out of floor range.");
 		
-		System.out.printf("%s Sending Elevator %d to Floor %d.\n", Building.getTimeString(), elevatorId, story);
+//		System.out.printf("%s Sending Elevator %d to Floor %d.\n", Building.getTimeString(), elevatorId, story);
 		Elevator e = elevators.get(elevatorId - 1);
 		synchronized(e){
 			e.notify();

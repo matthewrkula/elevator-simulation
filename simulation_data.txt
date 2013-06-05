@@ -1,2 +1,2 @@
 duration, 	scale, 	floors, 	elevators, 	max_persons, 	ms_per_floor, 	ms_door_operation, 	default_elevator_floor, 	persons_per_minute, 	start_dest_pct
-5,			40, 		16, 	    4, 			8,				1000,			3000,				7,1,1,1,					5,						15, 5, 5, 5, 5, 5, 10, 5, 5, 5, 5, 5, 5, 5, 5, 10
+10,			400, 	16, 	    4, 			8,				1000,			3000,				7,1,1,1,					5,						15, 5, 5, 5, 5, 5, 10, 5, 5, 5, 5, 5, 5, 5, 5, 10

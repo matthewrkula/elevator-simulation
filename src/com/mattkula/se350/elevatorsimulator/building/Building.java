@@ -51,7 +51,7 @@ public class Building {
 	 * @param inputFile - The input file to get the data from.
 	 * @throws InvalidArgumentException when floors < 2 or number of elevators < 1
 	 */
-	public Building(String inputFile) throws IllegalStateException, InvalidArgumentException{
+	public Building(String inputFile, int decisionDelegate) throws IllegalStateException, InvalidArgumentException{
 		isRunning = true;
 		currentTime = 0;
 		buildingStats = DataInputUtility.getBuildingInfoFromFile(inputFile);
@@ -65,7 +65,7 @@ public class Building {
 		
 		FloorManager.initialize(buildingStats.getNumOfFloors());
 		PersonGenerator.initialize(buildingStats);
-		ElevatorController.initialize(buildingStats);	//Starts the elevator threads
+		ElevatorController.initialize(buildingStats, decisionDelegate);	//Starts the elevator threads
 		ReportGenerator.initialize(buildingStats.getNumOfFloors());
 		simulate();
 	}
@@ -74,7 +74,7 @@ public class Building {
 	 * Constructor used ONLY for debugging purposes. DOES NOt begin the simulation, rather
 	 * waits for input from test cases.
 	 */
-	public Building(String inputFile, boolean isTesting) throws IllegalStateException, InvalidArgumentException{
+	public Building(String inputFile, int decisionDelegate, boolean isTesting) throws IllegalStateException, InvalidArgumentException{
 		isRunning = true;
 		currentTime = 0;
 		buildingStats = DataInputUtility.getBuildingInfoFromFile(inputFile);;
@@ -88,7 +88,7 @@ public class Building {
 		
 		FloorManager.initialize(buildingStats.getNumOfFloors());
 		PersonGenerator.initialize(buildingStats);
-		ElevatorController.initialize(buildingStats);	//Starts the elevator threads
+		ElevatorController.initialize(buildingStats, decisionDelegate);	//Starts the elevator threads
 		ReportGenerator.initialize(buildingStats.getNumOfFloors());
 		if(!isTesting)
 			simulate();

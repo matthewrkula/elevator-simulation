@@ -20,6 +20,7 @@ public class DataInputUtility {
 	 * Gets all simulation that is neccessary for execution from a file.
 	 * @param inputFile - the File to get the data from
 	 * @return BuildingStatsDTO that contains all neccessary simulation data.
+	 * @throws InvlaidArgumentException - if the Data in the file is incorrect/illegal
 	 */
 	public static BuildingStatsDTO getBuildingInfoFromFile(String inputFile) throws InvalidArgumentException{
 		File data = new File(inputFile);
@@ -60,7 +61,7 @@ public class DataInputUtility {
 			returnObject = new BuildingStatsDTO(duration, scale, floors, elevators, maxPersons, msPerFloor,
 												msDoorOperation, defaultFloors, personsPerMinute, startDestPct);
 			
-			System.out.println(returnObject.toString());
+//			System.out.println(returnObject.toString());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

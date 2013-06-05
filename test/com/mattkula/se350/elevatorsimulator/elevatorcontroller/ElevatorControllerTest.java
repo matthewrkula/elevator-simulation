@@ -19,23 +19,23 @@ public class ElevatorControllerTest {
 
 	@Test(expected=InvalidArgumentException.class)
 	public void testFailInitialization() throws InvalidArgumentException {
-		ElevatorController.initialize(new BuildingStatsDTO(1, 1, 2, 0, 12, 1000, 2200, new int[]{0}, 0, new int[]{100, 0}));
+		ElevatorController.initialize(new BuildingStatsDTO(1, 1, 2, 0, 12, 1000, 2200, new int[]{0}, 0, new int[]{100, 0}), ElevatorController.DEFAULT_DECISION_DELEGATE);
 	}
 	
 	@Test(expected=InvalidArgumentException.class)
 	public void testFailInitializationBadDefaultFloor() throws InvalidArgumentException {
-		ElevatorController.initialize(new BuildingStatsDTO(1, 1, 2, 1, 12, 1000, 2200, new int[]{0}, 0, new int[]{100, 0}));
+		ElevatorController.initialize(new BuildingStatsDTO(1, 1, 2, 1, 12, 1000, 2200, new int[]{0}, 0, new int[]{100, 0}), ElevatorController.DEFAULT_DECISION_DELEGATE);
 	}
 	
 	@Test(expected=InvalidArgumentException.class)
 	public void testFailInitializationBadMaxCapacity() throws InvalidArgumentException {
-		ElevatorController.initialize(new BuildingStatsDTO(1, 1, 2, 1, 0, 1000, 2200, new int[]{1}, 0, new int[]{100, 0}));
+		ElevatorController.initialize(new BuildingStatsDTO(1, 1, 2, 1, 0, 1000, 2200, new int[]{1}, 0, new int[]{100, 0}), ElevatorController.DEFAULT_DECISION_DELEGATE);
 	}
 
 	@Test
 	public void testInitializationPass(){
 		try{
-			ElevatorController.initialize(new BuildingStatsDTO(1, 1, 5, 1, 12, 1000, 2200, new int[]{1}, 0, new int[]{100, 0, 0, 0, 0}));
+			ElevatorController.initialize(new BuildingStatsDTO(1, 1, 5, 1, 12, 1000, 2200, new int[]{1}, 0, new int[]{100, 0, 0, 0, 0}), ElevatorController.DEFAULT_DECISION_DELEGATE);
 		}catch(Exception e){
 			fail("Elevator Controller should have initialized");
 		}
@@ -43,7 +43,7 @@ public class ElevatorControllerTest {
 	
 	@Test
 	public void testReturnsCorrectNumberOfElevatorDTOs() throws InvalidArgumentException{
-		ElevatorController.initialize(new BuildingStatsDTO(1, 1, 5, 1, 12, 1000, 2200, new int[]{1}, 0, new int[]{100, 0, 0, 0, 0}));
+		ElevatorController.initialize(new BuildingStatsDTO(1, 1, 5, 1, 12, 1000, 2200, new int[]{1}, 0, new int[]{100, 0, 0, 0, 0}), ElevatorController.DEFAULT_DECISION_DELEGATE);
 		assertEquals(1, ElevatorController.getInstance().getElevatorData().length);
 	}
 	

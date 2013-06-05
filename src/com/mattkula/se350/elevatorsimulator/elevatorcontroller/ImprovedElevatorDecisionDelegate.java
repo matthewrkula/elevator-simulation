@@ -1,5 +1,6 @@
 package com.mattkula.se350.elevatorsimulator.elevatorcontroller;
 
+import com.mattkula.se350.elevatorsimulator.building.Building;
 import com.mattkula.se350.elevatorsimulator.elevator.Elevator;
 import com.mattkula.se350.elevatorsimulator.elevator.ElevatorDTO;
 
@@ -25,13 +26,13 @@ public class ImprovedElevatorDecisionDelegate implements ElevatorDecisionDelegat
 			
 			if((elevator.status == Elevator.Status.WAITING || elevator.status == Elevator.Status.WAITING_DEFAULT)
 					&& elevator.currentFloor == story){
-					System.out.println(String.format("Best fit for %d is %d", story, i));
+					System.out.println(String.format("%s Sending Elevator %d to Floor %d", Building.getTimeString(), i, story));
 					return i;
 			}
 			
 			if((elevator.status == Elevator.Status.MOVING_UP && elevator.currentFloor < story && direction == ElevatorController.UP) ||
 					(elevator.status == Elevator.Status.MOVING_DOWN && elevator.currentFloor > story && direction == ElevatorController.DOWN)){
-				System.out.println(String.format("Best fit for %d is %d", story, i));
+				System.out.println(String.format("%s Sending Elevator %d to Floor %d", Building.getTimeString(), i, story));
 				return i;
 			}
 		}
@@ -56,14 +57,14 @@ public class ImprovedElevatorDecisionDelegate implements ElevatorDecisionDelegat
 		}
 		
 		if(closestElevator != 0){
-			System.out.println(String.format("Best fit for %d is %d", story, closestElevator));
+			System.out.println(String.format("%s Sending Elevator %d to Floor %d", Building.getTimeString(), closestElevator, story));
 			return closestElevator;
 		}
 		//end pass
 		
 		
 		//No good fit
-		System.out.println(String.format("No good fit for %d", story));
+		System.out.println(String.format("%s No good fit for %d", Building.getTimeString(), story));
 		return 0;
 	}
 	

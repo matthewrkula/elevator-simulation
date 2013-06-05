@@ -19,7 +19,7 @@ public class BuildingTest {
 	@Test
 	public void testBuildingCompletionPass(){
 		try{
-			Building b = new Building("simulation_data_testing.txt", true);
+			Building b = new Building("simulation_data_testing.txt", ElevatorController.DEFAULT_DECISION_DELEGATE, true);
 		}catch(InvalidArgumentException e){
 			fail("Building should have been completed");
 		}
@@ -28,14 +28,14 @@ public class BuildingTest {
 	//Tests sending request to a bad elevator id, should throw exception
 	@Test(expected=InvalidArgumentException.class)
 	public void testSendingRequestElevatorArgumentFail() throws InvalidArgumentException{
-		Building b = new Building("simulation_data_testing.txt", true);
+		Building b = new Building("simulation_data_testing.txt", ElevatorController.DEFAULT_DECISION_DELEGATE, true);
 		ElevatorController.getInstance().sendRequestToElevator(-1, 5);
 	}
 	
 	//Tests sending request to non-existant floor, should throw exception
 	@Test(expected=InvalidArgumentException.class)
 	public void testSendingRequestFloorArgumentFail() throws InvalidArgumentException{
-			Building b = new Building("simulation_data_testing.txt", true);
+			Building b = new Building("simulation_data_testing.txt", ElevatorController.DEFAULT_DECISION_DELEGATE, true);
 			ElevatorController.getInstance().sendRequestToElevator(3, 0);
 	}
 	
@@ -43,7 +43,7 @@ public class BuildingTest {
 	@Test
 	public void testSendingRequestPass(){
 		try{
-			Building b = new Building("simulation_data_testing.txt", true);
+			Building b = new Building("simulation_data_testing.txt", ElevatorController.DEFAULT_DECISION_DELEGATE, true);
 			ElevatorController.getInstance().sendRequestToElevator(3, 10);
 		}catch(InvalidArgumentException e){
 			fail("InvalidArgumentException should not have been thrown");
